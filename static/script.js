@@ -599,7 +599,8 @@ async function downloadImage() {
                 },
                 body: JSON.stringify({ 
                     image_data: imageData,
-                    image_name: imageName
+                    image_name: imageName,
+                    format_type: format_type
                 })
             });
             await fetch('/save_annotations', {

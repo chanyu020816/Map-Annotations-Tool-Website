@@ -1,0 +1,26 @@
+{
+    "info": 
+    {
+        "year": "",
+        "version": "0"
+    }, 
+    "images":
+    [
+        
+    ],
+    "categories":
+    [
+        {"id":0,"name":"田地","supercategory":"none"},
+        {"id":1,"name":"草地","supercategory":"none"},
+        {"id":2,"name":"荒地","supercategory":"none"},
+        {"id":3,"name":"墓地","supercategory":"none"},
+        {"id":4,"name":"樹林","supercategory":"none"},
+        {"id":5,"name":"竹林","supercategory":"none"},
+        {"id":6,"name":"旱地","supercategory":"none"},
+        {"id":7,"name":"茶園","supercategory":"none"}
+    ],
+    "annotations":
+    [
+
+    ]
+}
