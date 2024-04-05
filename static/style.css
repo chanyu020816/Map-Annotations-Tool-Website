@@ -1,0 +1,382 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: left;
+    padding: 35px;
+    background-color: #f4f4f4;
+
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+    overflow: auto;
+}
+
+.image-container {
+    width: 720px;
+    height: 720px;
+    background-color: #ccc; /* 可以选择设置一个默认的背景颜色 */
+    position: relative;
+    overflow: hidden; /* 防止图片溢出 */
+}
+#image-display {
+    display: none; /* 初始时图片不显示 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 720px; 
+    height: 720px;
+    object-fit: contain; /* 保持图片比例并填充整个容器 */
+}
+
+#image_display {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 720px; 
+    height: 720px;
+    object-fit: contain; /* 保持图片比例并填充整个容器 */
+}
+
+
+#custom-file-button {
+    background-color: #008CBA;
+}
+
+#upload-button {
+    background-color: #392fff;
+    color: white;
+    margin: 30px;
+    position: absolute; /* 将按钮设置为绝对定位 */
+    top: 0; /* 与 .content 的顶部对齐 */
+    left: 750px; /* 与 .content 的右侧对齐 */
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#upload-button:hover {
+    background-color: #008CBA; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+}
+#reset-button {
+    background-color: #392fff;
+    color: white;
+    margin: 30px;
+    position: absolute; /* 将按钮设置为绝对定位 */
+    top: 0; /* 与 .content 的顶部对齐 */
+    left: 925px; /* 与 .content 的右侧对齐 */
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#reset-button:hover {
+    background-color: #008CBA; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+}
+#download-button:hover {
+    background-color: #008CBA; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+}
+#prev-button:hover {
+    background-color: #008CBA; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+}
+#next-button:hover {
+    background-color: #008CBA; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+}
+
+#image-counter {
+    padding: 15px 50px;
+    margin: 30px;
+    position: absolute; /* 将按钮设置为绝对定位 */
+    top: 220px; /* 与 .content 的顶部对齐 */
+    left: 800px; /* 与 .content 的右侧对齐 */
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#download-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute; /* 将按钮设置为绝对定位 */
+    top: 140px; /* 与 .content 的顶部对齐 */
+    left: 925px; /* 与 .custom-file-button 的右侧对齐 */
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#prev-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute; /* 将按钮设置为绝对定位 */
+    top: 70px; /* 与 .content 的顶部对齐 */
+    left: 750px; /* 与 .content 的右侧对齐 */
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#next-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute; /* 将按钮设置为绝对定位 */
+    top: 70px; /* 与 .content 的顶部对齐 */
+    left:  925px; /* 与 .custom-file-button 的右侧对齐 */
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#custom-file-button:hover, #prev:hover, #next:hover {
+    background-color: #45a049;
+}
+
+nav {
+    display: block;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+ul {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.pagination {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 0px;
+    margin: 18px 0px;
+    border-radius: 4px;
+}
+
+.pagination > li {
+    display: inline;
+}
+
+.pagination > li:first-child > a {
+    margin-left: 0px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.pagination > li:last-child > a {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+a {
+    background-color: transparent;
+}
+
+.pagination > li > a {
+    position: relative;
+    float: left;
+    padding: 6px 18px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: rgb(51, 122, 183);
+    text-decoration: none;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(221, 221, 221);
+}
+
+a:active {
+    outline: 0px;
+}
+
+a:focus {
+    color: rgb(35, 82, 124);
+    text-decoration: underline;
+}
+
+.pagination > li > a:focus {
+    z-index: 3;
+    color: rgb(35, 82, 124);
+    background-color: rgb(238, 238, 238);
+    border-color: rgb(221, 221, 221);
+}
+
+a:visited {
+    text-decoration: underline;
+}
+
+a[href]::after {
+    content: " (" attr(href) ")";
+}
+
+a[href^="#"]::after {
+    content: "";
+}
+
+.pagination > .active > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgb(51, 122, 183);
+    border-color: rgb(51, 122, 183);
+}
+
+.pagination > .active > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgb(51, 122, 183);
+    border-color: rgb(51, 122, 183);
+}
+
+#label-size-container {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 22px;
+    margin-left: 3px; /* 添加间距以与pagination分开 */
+}
+
+#label-size {
+    width: 60px; /* 设置宽度 */
+    height: 30px; /* 设置高度 */
+    font-size: 18px; /* 设置字体大小 */
+    position: relative;
+    top: 0;
+    left: 0;
+}
+label[for="label-size"] {
+    font-size: 18px; /* 设置字体大小 */
+}
+
+
+#image-menu {
+    list-style-type: none; /* 移除默认的列表项标志 */
+    padding: 0;
+    position: absolute; /* 绝对定位 */
+    left: 770px; /* 调整水平位置 */
+    top: 300px; /* 调整垂直位置 */
+   
+}
+
+#image-menu li.completed > a::before {
+    content: '\2713'; /* 使用 Unicode 符号表示勾 */
+    margin-right: 5px; /* 为了调整勾选框与文本之间的间距 */
+    color: green; /* 设置已完成勾的颜色 */
+}
+
+#image-menu li::before {
+    content: none; /* 不显示任何内容 */
+    display: none; /* 不显示前面的内容 */
+}
+
+
+.delete-button {
+    background-color: #FF3A3A;
+    color: white;
+    padding: 2px 5px;
+    margin: 5px;
+    margin-left: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#image-menu li {
+    display: table-row; /* 将列表项显示为表格行 */
+}
+
+#image-menu li > * {
+    display: table-cell; /* 将列表项内的元素显示为表格单元格 */
+    padding: 5px; /* 设置单元格内边距 */
+    border-bottom: 1px solid #ccc; /* 添加底部边框 */
+    vertical-align: middle; /* 垂直居中 */
+}
+
+#image-menu li > a {
+    text-decoration: underline; /* 移除超链接的下划线 */
+    color: black; /* 默认字体颜色为黑色 */
+    
+}
+
+.selection-rect {
+    position: absolute;
+    border: 2px dashed #00BFFF;  /* 虛線邊框，顏色可自定 */
+    background-color: rgba(0, 191, 255, 0.2);  /* 半透明背景，顏色可自定 */
+    z-index: 10;  /* 確保矩形在其他元素之上 */
+}
+
+.detection-box, .overlay-div {
+    position: absolute;
+    border: 2px solid red;
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
+#format-select {
+    position: absolute;
+    top: 140px;
+    margin: 30px;
+    left: 750px; /* 与 .custom-file-button 的右侧对齐 */
+    font-size: 16px;
+    background-color: #ff902f;
+    color: white;
+    text-align: center;
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    border-radius: 5px;
+    width: 163px;
+    height: 52px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#format-select:hover {
+    background-color: #efc483; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+}
+#download-status {
+    padding: 15px 50px;
+    margin: 30px;
+    position: absolute; /* 将按钮设置为绝对定位 */
+    top: 185px; /* 与 .content 的顶部对齐 */
+    left: 700px; /* 与 .content 的右侧对齐 */
+    vertical-align: top; /* 保持与图片顶部对齐 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
