@@ -412,6 +412,7 @@ function deleteImage(index) {
         detections.splice(index, 1);
         paddings.splice(index, 1);
         updateImageMenu(imagesName);
+        labels = [];    
         if (images.length === 0) {
             showBlankImage();
             return;
@@ -437,6 +438,7 @@ function deleteImage(index) {
             imagesName.splice(index, 1);
             detections.splice(index, 1);
             paddings.splice(index, 1);
+            labels = [];
             updateImageMenu(imagesName);
             if (images.length === 0) {
                 showBlankImage();

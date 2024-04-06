@@ -8,11 +8,14 @@ from flask import request, jsonify
 import os
 import json
 import yaml
+import csv
+from pascal_voc_writer import Writer
+import shutil
 from image_padding import ImagePadding
 from datetime import datetime
 
 app = Flask(__name__)
-
+classes = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶園"]
 
 @app.route('/')
 def index():
@@ -31,13 +34,24 @@ def save_image():
         if not os.path.exists(image_folder_path):
             os.mkdir(image_folder_path)
     elif format_type == "pascal":
-        pass
+        image_folder_path = os.path.join("Annotations", "PASCAL_Annotations")
+        if not os.path.exists(image_folder_path):
+            os.mkdir(image_folder_path)
     elif format_type == 'coco':
         image_folder_path = os.path.join("Annotations", "COCO_Annotations")
         if not os.path.exists(image_folder_path):
             os.mkdir(image_folder_path)
     elif format_type == "tensorflow":
-        pass 
+        image_name = image_name.replace(',', "_")
+        image_folder_path = os.path.join("Annotations", "Tensorflow_Annotations")
+        if not os.path.exists(image_folder_path):
+            os.mkdir(image_folder_path)
+    elif format_type == "obb":
+        image_folder_path = os.path.join("Annotations", "OrientedObject_Annotations", "images")
+        if not os.path.exists(os.path.join("Annotations", "OrientedObject_Annotations")):
+            os.mkdir(os.path.join("Annotations", "OrientedObject_Annotations"))
+        if not os.path.exists(image_folder_path):
+            os.mkdir(image_folder_path)
     
     output_path = os.path.join(image_folder_path, f'{image_name}.jpg')
     
@@ -68,12 +82,39 @@ def save_annotations():
                 file.write(f'{id} {x} {y} {w} {h} ' + '\n')
        
     elif format_type == 'pascal':
-        pass
+        voc_folder_path = os.path.join("Annotations", "PASCAL_Annotations")
+        """ 
+        # create pascal voc writer (image_path, width, height)
+        writer = Writer('path/to/img.jpg', 800, 598)
+
+        # add objects (class, xmin, ymin, xmax, ymax)
+        writer.addObject('truck', 1, 719, 630, 468)
+        writer.addObject('person', 40, 90, 100, 150)
+
+        # write to file
+        writer.save('path/to/img.xml')
+        """
+        
+        writer = Writer(os.path.join(voc_folder_path, f'{image_name}.jpg'), image_size, image_size)
+        for label in yolo_labels:
+            id, x, y, w, h = label.values()
+    
+            x *= image_size
+            y *= image_size
+            w *= image_size
+            h *= image_size
+            x1 = x - w / 2
+            y1 = y - h / 2
+            x2 = x + w / 2
+            y2 = y + h / 2
+            writer.addObject(classes[id], x1, y1, x2, y2)
+        writer.save(os.path.join(voc_folder_path, f'{image_name}.xml'))
+        
     elif format_type == 'coco':
         coco_folder_path = os.path.join("Annotations", "COCO_Annotations")
         
-        if os.path.exists(os.path.join(coco_folder_path, "annotations.coco.json")):
-            with open(os.path.join(coco_folder_path, "annotations.coco.json"), "r") as f:
+        if os.path.exists(os.path.join(coco_folder_path, "annotations.json")):
+            with open(os.path.join(coco_folder_path, "annotations.json"), "r") as f:
                 old_annotations = json.load(f)
         else:
             with open(os.path.join("annotations_template", "annotations.json"), "r") as f:
@@ -105,7 +146,7 @@ def save_annotations():
             new_anno_infos.append(new_anno_info)
         old_annotations["annotations"].extend(new_anno_infos)
         
-        with open(os.path.join(coco_folder_path, "annotations.coco.json"), "w") as f:
+        with open(os.path.join(coco_folder_path, "annotations.json"), "w") as f:
             json.dump(old_annotations, f)
         
         coco_info["MAX_IMAGE_ID"] = MAX_IMAGE_ID
@@ -114,8 +155,26 @@ def save_annotations():
             yaml.dump(coco_info, f)
 
     elif (format_type == 'tensorflow'):
-        pass
-       
+        image_name = image_name.replace(',', "_")
+        annotations_path = os.path.join("Annotations", "Tensorflow_Annotations")
+        if not os.path.exists(os.path.join(annotations_path, "annotations.csv")):
+            shutil.copy("./annotations_template/annotations.csv", annotations_path)
+        new_annos = []
+        for label in yolo_labels:
+            new_anno = yolo2tensorflow(label, f'{image_name}.jpg', 480)
+            new_annos.append(new_anno)
+        with open(os.path.join(annotations_path, "annotations.csv"), "a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerows(new_annos)
+    elif (format_type == 'obb'):
+        label_folder_path = os.path.join("Annotations", "OrientedObject_Annotations", "labels")
+        if not os.path.exists(label_folder_path):
+            os.mkdir(label_folder_path)
+        output_path = os.path.join(label_folder_path, f'{image_name}.txt')
+        with open(output_path, 'w') as file:
+            for label in yolo_labels:
+                id, x, y, w, h = label.values()
+                file.write(f'{id} {x} {y} {w} {h} ' + '\n')
     return jsonify({'message': 'Success'})
 
 def yolo2coco(yololabels, image_id, anno_id, img_size):
@@ -136,6 +195,20 @@ def yolo2coco(yololabels, image_id, anno_id, img_size):
         "segmentation":[],
         "iscrowd":0
     }
+    return new_annotation
+
+def yolo2tensorflow(yololabels, image_name, img_size):
+    id, x, y, w, h = yololabels.values()
+    
+    x *= img_size
+    y *= img_size
+    w *= img_size
+    h *= img_size
+    x1 = x - w / 2
+    y1 = y - h / 2
+    x2 = x + w / 2
+    y2 = y + h / 2
+    new_annotation = [image_name, img_size, img_size, classes[id], x1, y1, x2, y2]
     return new_annotation
 
 if __name__ == '__main__':

@@ -1,0 +1,8 @@
+Flask==3.0.0
+Pillow
+flask_cors
+opencv-python==4.8.1.78
+jsonify
+pandas
+pyyaml
+pascal-voc-writer
