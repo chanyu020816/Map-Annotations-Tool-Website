@@ -40,7 +40,7 @@
             <!-- 第二个按钮，点击后显示另一套内容 -->
             <button id="secondSetBtn">第二套圖徵</button>
             <ul class="pagination" id="pagination1_1">
-                <li class="ptype active" data-ptype="1">
+                <li class="ptype active" data-ptype="1" id="class1ptype">
                     <a class="ptypeBtn" data-ptype="1" href="#" style="display: inline-block;">
                         田地
                         <img src="{{ url_for('static', filename='images/farmland.png') }}" 
@@ -100,7 +100,7 @@
                 </li>
             </ul>
             <ul class="pagination" id="pagination2_1" style="display: none" >
-                <li class="ptype active" data-ptype="1">
+                <li class="ptype active" data-ptype="1" id="class2ptype">
                     <a class="ptypeBtn" data-ptype="1" href="#" style="display: inline-block;">
                         果園
                         <img src="{{ url_for('static', filename='images/class2-1.png') }}" 

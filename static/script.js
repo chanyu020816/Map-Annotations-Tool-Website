@@ -87,6 +87,14 @@ document.addEventListener('DOMContentLoaded', function() {
         pagination2_3.style.display = 'none';
         firstSetBtn.style = "border: 3px solid red;"
         secondSetBtn.style.border = "none"
+        
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('ptype', 'active');
+        });
+        const class1ptype = document.getElementById('class1ptype');
+        class1ptype.classList.add('ptype', 'active');
+        ptype = 1;
     });
 
     // 第二个按钮点击事件，显示第二套内容，隐藏第一套内容
@@ -99,6 +107,14 @@ document.addEventListener('DOMContentLoaded', function() {
         pagination2_3.style.display = 'block';
         firstSetBtn.style.border = "none"
         secondSetBtn.style = "border: 3px solid red;"
+
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('ptype', 'active');
+        });
+        const class2ptype = document.getElementById('class2ptype');
+        class2ptype.classList.add('ptype', 'active');
+        ptype = 1;
     });
 });
 
