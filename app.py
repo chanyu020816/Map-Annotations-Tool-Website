@@ -15,7 +15,8 @@ from image_padding import ImagePadding
 from datetime import datetime
 
 app = Flask(__name__)
-classes = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶園"]
+class1 = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶園"]
+class2 = ["果園", "茶畑", "桑畑", "沼田", "水田", "乾田", "荒地", "樹林椶櫚科", "竹林", "樹林鍼葉", "樹林濶葉", "草地"]
 
 @app.route('/')
 def index():
@@ -27,29 +28,30 @@ def save_image():
     image_data = data['image_data']
     image_name = data["image_name"]
     format_type = data["format_type"]
+    set = data["class_set"]
     if format_type == "yolo":
-        image_folder_path = os.path.join("Annotations", "Yolo_Annotations", "images")
-        if not os.path.exists(os.path.join("Annotations", "Yolo_Annotations")):
-            os.mkdir(os.path.join("Annotations", "Yolo_Annotations"))
+        image_folder_path = os.path.join("Annotations", f"Yolo_AnnotationsSet{set}", "images")
+        if not os.path.exists(os.path.join("Annotations", f"Yolo_AnnotationsSet{set}")):
+            os.mkdir(os.path.join("Annotations", f"Yolo_AnnotationsSet{set}"))
         if not os.path.exists(image_folder_path):
             os.mkdir(image_folder_path)
     elif format_type == "pascal":
-        image_folder_path = os.path.join("Annotations", "PASCAL_Annotations")
+        image_folder_path = os.path.join("Annotations", f"PASCAL_AnnotationsSet{set}")
         if not os.path.exists(image_folder_path):
             os.mkdir(image_folder_path)
     elif format_type == 'coco':
-        image_folder_path = os.path.join("Annotations", "COCO_Annotations")
+        image_folder_path = os.path.join("Annotations", f"COCO_AnnotationsSet{set}")
         if not os.path.exists(image_folder_path):
             os.mkdir(image_folder_path)
     elif format_type == "tensorflow":
         image_name = image_name.replace(',', "_")
-        image_folder_path = os.path.join("Annotations", "Tensorflow_Annotations")
+        image_folder_path = os.path.join("Annotations", f"Tensorflow_AnnotationsSet{set}")
         if not os.path.exists(image_folder_path):
             os.mkdir(image_folder_path)
     elif format_type == "obb":
-        image_folder_path = os.path.join("Annotations", "OrientedObject_Annotations", "images")
-        if not os.path.exists(os.path.join("Annotations", "OrientedObject_Annotations")):
-            os.mkdir(os.path.join("Annotations", "OrientedObject_Annotations"))
+        image_folder_path = os.path.join("Annotations", f"OrientedObject_AnnotationsSet{set}", "images")
+        if not os.path.exists(os.path.join("Annotations", f"OrientedObject_AnnotationsSet{set}")):
+            os.mkdir(os.path.join("Annotations", f"OrientedObject_AnnotationsSet{set}"))
         if not os.path.exists(image_folder_path):
             os.mkdir(image_folder_path)
     
@@ -65,24 +67,24 @@ def save_image():
 
 @app.route('/save_annotations', methods=['POST'])
 def save_annotations():
-    
     data = request.json
     image_name = data["image_name"]
     format_type = data["format_type"]
     yolo_labels = data["yolo_labels"]
     image_size = data["img_size"]
+    set = data["class_set"]
     if format_type == 'yolo':
-        label_folder_path = os.path.join("Annotations", "Yolo_Annotations", "labels")
+        label_folder_path = os.path.join("Annotations", f"Yolo_AnnotationsSet{set}", "labels")
         if not os.path.exists(label_folder_path):
             os.mkdir(label_folder_path)
         output_path = os.path.join(label_folder_path, f'{image_name}.txt')
         with open(output_path, 'w') as file:
             for label in yolo_labels:
-                id, x, y, w, h = label.values()
+                id, x, y, w, h, _ = label.values()
                 file.write(f'{id} {x} {y} {w} {h} ' + '\n')
        
     elif format_type == 'pascal':
-        voc_folder_path = os.path.join("Annotations", "PASCAL_Annotations")
+        voc_folder_path = os.path.join("Annotations", f"PASCAL_AnnotationsSet{set}")
         """ 
         # create pascal voc writer (image_path, width, height)
         writer = Writer('path/to/img.jpg', 800, 598)
@@ -97,7 +99,7 @@ def save_annotations():
         
         writer = Writer(os.path.join(voc_folder_path, f'{image_name}.jpg'), image_size, image_size)
         for label in yolo_labels:
-            id, x, y, w, h = label.values()
+            id, x, y, w, h, _ = label.values()
     
             x *= image_size
             y *= image_size
@@ -107,11 +109,11 @@ def save_annotations():
             y1 = y - h / 2
             x2 = x + w / 2
             y2 = y + h / 2
-            writer.addObject(classes[id], x1, y1, x2, y2)
+            writer.addObject(class1[id], x1, y1, x2, y2)
         writer.save(os.path.join(voc_folder_path, f'{image_name}.xml'))
         
     elif format_type == 'coco':
-        coco_folder_path = os.path.join("Annotations", "COCO_Annotations")
+        coco_folder_path = os.path.join("Annotations", f"COCO_AnnotationsSet{set}")
         
         if os.path.exists(os.path.join(coco_folder_path, "annotations.json")):
             with open(os.path.join(coco_folder_path, "annotations.json"), "r") as f:
@@ -156,7 +158,7 @@ def save_annotations():
 
     elif (format_type == 'tensorflow'):
         image_name = image_name.replace(',', "_")
-        annotations_path = os.path.join("Annotations", "Tensorflow_Annotations")
+        annotations_path = os.path.join("Annotations", f"Tensorflow_AnnotationsSet{set}")
         if not os.path.exists(os.path.join(annotations_path, "annotations.csv")):
             shutil.copy("./annotations_template/annotations.csv", annotations_path)
         new_annos = []
@@ -167,7 +169,7 @@ def save_annotations():
             writer = csv.writer(f)
             writer.writerows(new_annos)
     elif (format_type == 'obb'):
-        label_folder_path = os.path.join("Annotations", "OrientedObject_Annotations", "labels")
+        label_folder_path = os.path.join("Annotations", f"OrientedObject_AnnotationsSet{set}", "labels")
         if not os.path.exists(label_folder_path):
             os.mkdir(label_folder_path)
         output_path = os.path.join(label_folder_path, f'{image_name}.txt')
@@ -178,7 +180,7 @@ def save_annotations():
     return jsonify({'message': 'Success'})
 
 def yolo2coco(yololabels, image_id, anno_id, img_size):
-    id, x, y, w, h = yololabels.values()
+    id, x, y, w, h, _ = yololabels.values()
     
     x *= img_size
     y *= img_size
@@ -198,7 +200,7 @@ def yolo2coco(yololabels, image_id, anno_id, img_size):
     return new_annotation
 
 def yolo2tensorflow(yololabels, image_name, img_size):
-    id, x, y, w, h = yololabels.values()
+    id, x, y, w, h, _ = yololabels.values()
     
     x *= img_size
     y *= img_size
@@ -208,7 +210,7 @@ def yolo2tensorflow(yololabels, image_name, img_size):
     y1 = y - h / 2
     x2 = x + w / 2
     y2 = y + h / 2
-    new_annotation = [image_name, img_size, img_size, classes[id], x1, y1, x2, y2]
+    new_annotation = [image_name, img_size, img_size, class1[id], x1, y1, x2, y2]
     return new_annotation
 
 if __name__ == '__main__':

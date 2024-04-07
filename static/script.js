@@ -10,9 +10,26 @@ let change = false;
 let detections = []; // 用來儲存所有圖片的檢測結果
 let paddings = []
 let ptype = 1;
+let classSet = 1;
+let annotations = [];
 let format_type = 'yolo'
 const split_size = 480
-
+const classColors = {
+    0: 'red',
+    1: 'blue',
+    2: 'green',
+    3: 'purple',
+    4: 'orange',
+    5: 'pink',
+    6: 'yellow',
+    7: 'cyan',
+    8: 'magenta',
+    9: 'teal',
+    10: 'brown',
+    11: 'olive',
+    12: 'navy'
+};
+let anno_ids = []
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('upload-button').addEventListener('click', function () {
@@ -49,6 +66,39 @@ document.addEventListener('DOMContentLoaded', function() {
     const formatSelect = document.getElementById('format-select');
     formatSelect.addEventListener('change', function() {
         format_type = formatSelect.value;
+    });
+
+    // 获取按钮和内容列表
+    const firstSetBtn = document.getElementById('firstSetBtn');
+    const secondSetBtn = document.getElementById('secondSetBtn');
+    const pagination1_1 = document.getElementById('pagination1_1');
+    const pagination1_2 = document.getElementById('pagination1_1');
+    const pagination2_1 = document.getElementById('pagination2_1');
+    const pagination2_2 = document.getElementById('pagination2_2');
+    const pagination2_3 = document.getElementById('pagination2_3');
+
+    // 第一个按钮点击事件，显示第一套内容，隐藏第二套内容
+    firstSetBtn.addEventListener('click', function() {
+        classSet = 1;
+        pagination1_1.style.display = 'block';
+        pagination1_2.style.display = 'block';
+        pagination2_1.style.display = 'none';
+        pagination2_2.style.display = 'none';
+        pagination2_3.style.display = 'none';
+        firstSetBtn.style = "border: 3px solid red;"
+        secondSetBtn.style.border = "none"
+    });
+
+    // 第二个按钮点击事件，显示第二套内容，隐藏第一套内容
+    secondSetBtn.addEventListener('click', function() {
+        classSet = 2;
+        pagination1_1.style.display = 'none';
+        pagination1_2.style.display = 'none';
+        pagination2_1.style.display = 'block';
+        pagination2_2.style.display = 'block';
+        pagination2_3.style.display = 'block';
+        firstSetBtn.style.border = "none"
+        secondSetBtn.style = "border: 3px solid red;"
     });
 });
 
@@ -143,6 +193,9 @@ function splitImage(image, file, size) {
             const imageName = `${fileName}_h${h}_w${w}`;
             imageNames.push(imageName);
             detections.push([]); // Initialize detections array for each image
+            labels.push([])
+            annotations.push([])
+            anno_ids.push(0)
             const padding = createPadding(h, w, numH, numW, size, padH, padW)
             paddings.push([padding])
         }
@@ -260,6 +313,7 @@ function createPadding(h, w, numH, numW, size, padH, padW) {
     }
     return [padxmin, padymin, padxmax, padymax]
 }
+
 function notInPadding(paddings_list, x, y, bbox_size, ratio) {
     const xleft = (x) * ratio
     const ytop = (y) * ratio
@@ -270,24 +324,24 @@ function notInPadding(paddings_list, x, y, bbox_size, ratio) {
     return xleft >= padxmin & ytop >= padymin & xright <= padxmax & ybottom <= padymax 
    
 }
+
 function showImage(index, change = true) {
     const container = document.getElementById('image-container');
     const imageDisplay = document.getElementById('image_display');
     if (imageDisplay) {
         container.removeChild(imageDisplay);
     }
-    if (change & index !== prev_index) {
-        container.innerHTML = '';
-        labels = [];
-        prev_index = currentImageIndex;
-    }
+    
     
     const img = document.createElement('img');
     img.id = 'image_display'
     // const img = document.getElementById('image-display');
     img.src = images[index];
     container.appendChild(img);
-    detections.push([]); // Initialize detections array for each image
+    if (change & index !== prev_index) {
+        updateAnnotations(index);
+        prev_index = currentImageIndex;
+    }
     // 更新菜单项样式
     const menuItems = document.querySelectorAll('#image-menu li');
     menuItems.forEach((menuItem, menuItemIndex) => {
@@ -306,6 +360,43 @@ function showImage(index, change = true) {
     updateImageCounter(currentImageIndex)
 }
 
+function updateAnnotations(index) {
+    // 獲取指定索引的圖片的標註結果
+    const currentImageAnnotations = annotations[index];
+    if (!currentImageAnnotations) {
+        return; // 如果沒有標註結果，則返回
+    }
+
+    // 移除上一個圖片的標註
+    const imageContainer = document.getElementById('image-container');
+    const divs = imageContainer.getElementsByClassName('overlay-div');
+    while (divs.length > 0) {
+        divs[0].parentNode.removeChild(divs[0]);
+    }
+
+    // 顯示當前圖片的標註
+    currentImageAnnotations.forEach(annotation => {
+        const { id, x, y, w, h, anno_id} = annotation;
+        const rect = document.createElement('div');
+        rect.className = 'overlay-div';
+        rect.style.position = 'absolute';
+        rect.style.left = `${x}px`;
+        rect.style.top = `${y}px`;
+        rect.style.width = `${w}px`;
+        rect.style.height = `${h}px`;
+        rect.style.backgroundColor = classColors[id];
+        rect.style.opacity = '0.5';
+        rect.dataset.anno_id = anno_id;
+        imageContainer.appendChild(rect);
+
+        rect.addEventListener('click', function () {
+            const removedAnnoId = this.dataset.anno_id;
+            labels[currentImageIndex] = labels[currentImageIndex].filter(label => parseInt(label.anno_id) !== parseInt(removedAnnoId));
+            annotations[currentImageIndex] = annotations[currentImageIndex].filter(anno => parseInt(anno.anno_id) !== parseInt(removedAnnoId));
+            this.remove();
+        });
+    });
+}
 
 function showPrevImage() {
     if (currentImageIndex > 0) {
@@ -360,7 +451,6 @@ function updateImageMenu(imageNames) {
         deleteButtonContainer.appendChild(deleteButton); // 将 delete button 放入容器内
         menuItem.appendChild(deleteButtonContainer); // 将容器放入菜单项内
 
-
         // 添加勾选框
         const checkbox = document.createElement('span');
         checkbox.className = 'checkbox';
@@ -412,7 +502,9 @@ function deleteImage(index) {
         detections.splice(index, 1);
         paddings.splice(index, 1);
         updateImageMenu(imagesName);
-        labels = [];    
+        labels.splice(index, 1);
+        annotations.splice(index, 1)
+        anno_ids.splice(index, 1)
         if (images.length === 0) {
             showBlankImage();
             return;
@@ -438,7 +530,9 @@ function deleteImage(index) {
             imagesName.splice(index, 1);
             detections.splice(index, 1);
             paddings.splice(index, 1);
-            labels = [];
+            labels.splice(index, 1);
+            annotations.splice(index, 1)
+            anno_ids.splice(index, 1)
             updateImageMenu(imagesName);
             if (images.length === 0) {
                 showBlankImage();
@@ -462,17 +556,7 @@ function showBlankImage() {
     container.innerHTML = '';
 }
 
-function imageClickHandler(event) {
-    const classColors = {
-        0: 'red',
-        1: 'blue',
-        2: 'green',
-        3: 'purple',
-        4: 'orange',
-        5: 'pink',
-        6: 'yellow',
-        7: 'cyan',
-    };
+function imageClickHandler(event) {    
 
     const labelSizeInput = document.getElementById('label-size');
     const divSize = parseInt(labelSizeInput.value)
@@ -500,42 +584,32 @@ function imageClickHandler(event) {
     div.style.height = `${bboxHeight}px`;
     div.style.backgroundColor = classColors[ptype - 1];
     div.style.opacity = '0.5';
-    labels.push({
+    div.dataset.anno_id = anno_ids[currentImageIndex];
+    document.getElementById('image-container').appendChild(div);
+    annotations[currentImageIndex].push({
+        id: ptype - 1,
+        x: divLeft,
+        y: divTop, 
+        w: bboxWidth,
+        h: bboxHeight,
+        anno_id: anno_ids[currentImageIndex] 
+    })
+    labels[currentImageIndex].push({
         id: ptype-1,
         x: xcenter * ratio / split_size,
         y: ycenter * ratio / split_size,
         w: bboxWidth * ratio / split_size,
-        h: bboxHeight * ratio / split_size
+        h: bboxHeight * ratio / split_size,
+        anno_id: anno_ids[currentImageIndex]
     });
-
-    /*
-    const newDetection = [clickX - divSize, clickY - divSize, clickX + divSize, clickY + divSize, divSize, 0];
-    detections[currentImageIndex].push(newDetection);
-    */
+    anno_ids[currentImageIndex] += 1
 
     div.addEventListener('click', function () {
-        this.remove();
-        labels = labels.filter(label => {
-            const labelwidth = label.w * rect.width;
-            const labelheight = label.h * rect.height;
-            const labelx = label.x * rect.width;
-            const labely = label.y * rect.height;
-            return !(Math.abs(clickX - labelx) * 2 < labelwidth && Math.abs(clickY - labely) * 2 < labelheight);
-        });
-        /*
-        if (detections[currentImageIndex]) {
-            detections[currentImageIndex] = detections[currentImageIndex].filter(detection => {
-                // 检查点击的 x, y 是否在检测框范围内
-                const [x0, y0, x1, y1] = detection;
-                const withinXRange = clickX >= x0 && clickX <= x1;
-                const withinYRange = clickY >= y0 && clickY <= y1;
-                return !(withinXRange && withinYRange);
-            });
-        }
-        */
+        const removedAnnoId = this.dataset.anno_id;
+        labels[currentImageIndex] = labels[currentImageIndex].filter(label => parseInt(label.anno_id) !== parseInt(removedAnnoId));
+        annotations[currentImageIndex] = annotations[currentImageIndex].filter(anno => parseInt(anno.anno_id) !== parseInt(removedAnnoId));
+        this.remove();        
     });
-
-    document.getElementById('image-container').appendChild(div);
 }
 
 function updateImageCounter(index) {
@@ -591,6 +665,7 @@ async function downloadImage() {
     if (images[currentImageIndex]) {
         const imageData = images[currentImageIndex]
         const imageName = imagesName[currentImageIndex]
+        const label = labels[currentImageIndex]
 
         try {
             downloadStatus.textContent = `正在儲存 ${imageName} ...`;
@@ -602,7 +677,8 @@ async function downloadImage() {
                 body: JSON.stringify({ 
                     image_data: imageData,
                     image_name: imageName,
-                    format_type: format_type
+                    format_type: format_type,
+                    class_set: classSet
                 })
             });
             await fetch('/save_annotations', {
@@ -613,8 +689,9 @@ async function downloadImage() {
                 body: JSON.stringify({ 
                     image_name: imageName, 
                     format_type: format_type,
-                    yolo_labels: labels,
-                    img_size:  split_size
+                    yolo_labels: label,
+                    img_size:  split_size,
+                    class_set: classSet
                 })
             });
             downloadStatus.textContent = '下載成功!';
@@ -630,3 +707,15 @@ async function downloadImage() {
     }
 }
 
+
+window.addEventListener('beforeunload', function(event) {
+    // 取消事件的默认动作，以便显示确认框
+    event.preventDefault();
+    // 标准中未定义文本的返回值，但大多数浏览器会显示一个默认文本
+    event.returnValue = '';
+    
+    // 显示确认框
+    const confirmationMessage = '是否确定要重新加载页面？';
+    event.returnValue = confirmationMessage; // 兼容旧版浏览器
+    return confirmationMessage;
+});

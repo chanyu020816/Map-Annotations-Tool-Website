@@ -102,7 +102,7 @@ body {
     margin: 30px;
     position: absolute; /* 将按钮设置为绝对定位 */
     top: 220px; /* 与 .content 的顶部对齐 */
-    left: 800px; /* 与 .content 的右侧对齐 */
+    left: 880px; /* 与 .content 的右侧对齐 */
     vertical-align: top; /* 保持与图片顶部对齐 */
     border: none;
     border-radius: 5px;
@@ -178,46 +178,50 @@ nav {
 
 ul {
     margin-top: 0px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .pagination {
-    display: inline-block;
+    
     vertical-align: top;
     padding-left: 0px;
-    margin: 18px 0px;
-    border-radius: 4px;
+    margin: 15px 0px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    
 }
 
 .pagination > li {
     display: inline;
 }
 
-.pagination > li:first-child > a {
-    margin-left: 0px;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
-}
-
-.pagination > li:last-child > a {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-}
 
 a {
     background-color: transparent;
 }
 
+.ptypeBtn {
+    width: 170px; /* 按钮宽度 */
+    margin: 0px 10px;
+    border-radius: 5px;
+    text-align: center;
+    border: 2px solid rgb(46, 98, 200); /* Add black border with thickness 2px */
+}
+
+/* 将第一行的按钮设为宽度占满父元素 */
+.pagination:nth-child(1) {
+    width: 100%;
+}
 .pagination > li > a {
     position: relative;
     float: left;
-    padding: 6px 18px;
+    padding: 0px 0px;
     margin-left: -1px;
     line-height: 1.42857;
     color: rgb(51, 122, 183);
     text-decoration: none;
     background-color: rgb(255, 255, 255);
-    border: 1px solid rgb(221, 221, 221);
 }
 
 a:active {
@@ -265,11 +269,11 @@ a[href^="#"]::after {
 }
 
 #label-size-container {
-    position: relative;
+    position: absolute;
     display: inline-block;
     vertical-align: top;
-    margin-top: 22px;
-    margin-left: 3px; /* 添加间距以与pagination分开 */
+    top: 265px; /* 与 .content 的顶部对齐 */
+    left: 785px; /* 与 .content 的右侧对齐 */
 }
 
 #label-size {
@@ -327,6 +331,7 @@ label[for="label-size"] {
     padding: 5px; /* 设置单元格内边距 */
     border-bottom: 1px solid #ccc; /* 添加底部边框 */
     vertical-align: middle; /* 垂直居中 */
+    
 }
 
 #image-menu li > a {
@@ -373,10 +378,75 @@ label[for="label-size"] {
     margin: 30px;
     position: absolute; /* 将按钮设置为绝对定位 */
     top: 185px; /* 与 .content 的顶部对齐 */
-    left: 700px; /* 与 .content 的右侧对齐 */
+    left: 705px; /* 与 .content 的右侧对齐 */
     vertical-align: top; /* 保持与图片顶部对齐 */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
+}
+
+#firstSetBtn {
+    background-color: #392fff;
+    color: white;
+    position: absolute;
+    top: 765px;
+    font: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    height: 40px;
+    width: 150px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+}
+#secondSetBtn {
+    background-color: #392fff;
+    color: white;
+    position: absolute;
+    top: 765px;
+    left: 200px;
+    font: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    height: 40px;
+    width: 150px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+}
+#pagination1_1 {
+    position: absolute;
+    top: 800px
+
+}
+
+#pagination1_2 {
+    position: absolute;
+    top: 950px
+
+}
+#pagination2_1 {
+    position: absolute;
+    top: 800px
+
+}
+
+#pagination2_2 {
+    position: absolute;
+    top: 950px
+
+}
+
+#pagination2_3 {
+    position: absolute;
+    top: 1100px;
+}
+
+#firstSetBtn:hover {
+    background-color: #008CBA; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+}
+
+#secondSetBtn:hover {
+    background-color: #008CBA; /* 鼠标悬停时的背景色 */
+    color: #ffffff; /* 鼠标悬停时的文本颜色 */
 }
