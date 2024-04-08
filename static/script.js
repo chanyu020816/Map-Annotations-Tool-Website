@@ -32,6 +32,20 @@ const classColors = {
 let anno_ids = []
 
 document.addEventListener('DOMContentLoaded', function() {
+     // 显示登录框
+    /*
+    document.getElementById("form_container").style.display = "block";
+
+    setTimeout(function() {
+        document.getElementById("form_container").style.display = "none";
+        document.querySelector(".content").style.display = "block";
+        document.querySelector("nav").style.display = "block";
+    }, 3000); // 这里模拟3秒后登录成功
+    */
+    document.getElementById("form_container").style.display = "none";
+    document.querySelector(".content").style.display = "block";
+    document.querySelector("nav").style.display = "block";
+
     document.getElementById('upload-button').addEventListener('click', function () {
         document.getElementById('file-input').click();
     });
@@ -634,7 +648,9 @@ function updateImageCounter(index) {
 
 // reset all labels
 function labelreset() {
-    labels = []
+    labels[currentImageIndex] = []
+    annotations[currentImageIndex] = []
+    anno_ids[currentImageIndex] = 0
     const imageContainer = document.getElementById('image-container');
     const divs = imageContainer.getElementsByClassName('overlay-div');
     while (divs.length > 0) {
@@ -723,7 +739,7 @@ async function downloadImage() {
     }
 }
 
-
+/*
 window.addEventListener('beforeunload', function(event) {
     // 取消事件的默认动作，以便显示确认框
     event.preventDefault();
@@ -735,3 +751,4 @@ window.addEventListener('beforeunload', function(event) {
     event.returnValue = confirmationMessage; // 兼容旧版浏览器
     return confirmationMessage;
 });
+*/
