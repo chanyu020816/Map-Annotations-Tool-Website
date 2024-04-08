@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         class2ptype.classList.add('ptype', 'active');
         ptype = 1;
     });
+
 });
 
 function handleFileSelect(event) {
@@ -144,13 +145,16 @@ function handleFileSelect(event) {
     }
     
     const promises = files.filter(f => f.type.match('image.*')).map(f => readFileAsDataURL(f));
-    
+    const imageContainer = document.getElementById('image-container');
+    imageContainer.addEventListener('mouseover', imageMouseOverHandler);
+    imageContainer.addEventListener('mouseout', imageMouseOutHandler);
     setTimeout(() => {
         downloadStatus.textContent = '已完成圖片上傳'; // 更新状态文本
     }, 10000);
     setTimeout(() => {
         downloadStatus.textContent = ''; // 清除状态文本
     }, 5000);
+    
 }
 
 function readFileAsDataURL(file) {
@@ -738,6 +742,52 @@ async function downloadImage() {
         downloadStatus.textContent = '沒有圖片可下載.';
     }
 }
+
+function imageMouseOverHandler(event) {
+    const labelSizeInput = document.getElementById('label-size');
+    const divSize = parseInt(labelSizeInput.value);
+    
+    const rect = this.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left - divSize/2;
+    const mouseY = event.clientY - rect.top - divSize/2;
+
+    const overlayDiv = document.createElement('div');
+    overlayDiv.className = 'overlay-div-preview';
+    overlayDiv.style.position = 'absolute';
+    overlayDiv.style.left = `${mouseX}px`;
+    overlayDiv.style.top = `${mouseY}px`;
+    overlayDiv.style.width = `${divSize}px`;
+    overlayDiv.style.height = `${divSize}px`;
+    overlayDiv.style.backgroundColor = classColors[ptype - 1];
+    overlayDiv.style.opacity = '0.3';
+    overlayDiv.style.border = '2px dashed #000';
+    overlayDiv.style.pointerEvents = 'none';
+    document.getElementById('image-container').appendChild(overlayDiv);
+
+    function updateOverlayPosition(event) {
+        const newX = event.clientX - rect.left - divSize/2;
+        const newY = event.clientY - rect.top - divSize/2;
+        overlayDiv.style.left = `${newX}px`;
+        overlayDiv.style.top = `${newY}px`;
+    }
+
+    function removeOverlay() {
+        overlayDiv.remove();
+        document.removeEventListener('mousemove', updateOverlayPosition);
+        document.removeEventListener('mouseout', removeOverlay);
+    }
+
+    document.addEventListener('mousemove', updateOverlayPosition);
+    document.addEventListener('mouseout', removeOverlay);
+}
+
+function imageMouseOutHandler() {
+    const overlayDiv = document.querySelector('.overlay-div-preview');
+    if (overlayDiv) {
+        overlayDiv.remove();
+    }
+}
+
 
 /*
 window.addEventListener('beforeunload', function(event) {
