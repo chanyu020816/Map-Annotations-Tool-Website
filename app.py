@@ -15,7 +15,7 @@ from image_padding import ImagePadding
 from datetime import datetime
 
 app = Flask(__name__)
-class1 = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶園"]
+class1 = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶畑"]
 class2 = ["果園", "茶畑", "桑畑", "沼田", "水田", "乾田", "荒地", "樹林椶櫚科", "竹林", "樹林鍼葉", "樹林濶葉", "草地"]
 classes = [class1, class2]
 

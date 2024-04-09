@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    document.getElementById('download-button').addEventListener('click', async function () {
+    document.getElementById('complete-button').addEventListener('click', async function () {
         completedImageName.push(imagesName[currentImageIndex])
         menuItemsCompleted.push(currentImageIndex)
         markImageAsCompleted(currentImageIndex); 
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const firstSetBtn = document.getElementById('firstSetBtn');
     const secondSetBtn = document.getElementById('secondSetBtn');
     const pagination1_1 = document.getElementById('pagination1_1');
-    const pagination1_2 = document.getElementById('pagination1_1');
+    const pagination1_2 = document.getElementById('pagination1_2');
     const pagination2_1 = document.getElementById('pagination2_1');
     const pagination2_2 = document.getElementById('pagination2_2');
     const pagination2_3 = document.getElementById('pagination2_3');
@@ -750,6 +750,8 @@ async function downloadImage() {
         const label = labels[currentImageIndex]
 
         try {
+            const folderHandle = await openFolderDialog();
+            const folderPath = folderHandle.name; // 获取文件夹路径
             downloadStatus.textContent = `正在儲存 ${imageName} ...`;
             await fetch('/save_image', {
                 method: 'POST',
@@ -760,7 +762,8 @@ async function downloadImage() {
                     image_data: imageData,
                     image_name: imageName,
                     format_type: format_type,
-                    class_set: classSet
+                    class_set: classSet,
+                    folder_path: folderPath
                 })
             });
             await fetch('/save_annotations', {
@@ -848,3 +851,14 @@ window.addEventListener('beforeunload', function(event) {
     return confirmationMessage;
 });
 */
+
+async function openFolderDialog() {
+    const options = {
+        // 只允许选择文件夹
+        type: 'openDirectory',
+    };
+    // 使用浏览器提供的API打开文件对话框
+    const folderHandle = await window.showDirectoryPicker(options);
+    // 返回用户选择的文件夹路径
+    return folderHandle;
+}

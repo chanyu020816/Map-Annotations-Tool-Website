@@ -14,18 +14,18 @@ body {
 .image-container {
     width: 720px;
     height: 720px;
-    background-color: #ccc; /* 可以选择设置一个默认的背景颜色 */
+    background-color: #ccc;  
     position: relative;
-    overflow: hidden; /* 防止图片溢出 */
+    overflow: hidden;  
 }
 #image-display {
-    display: none; /* 初始时图片不显示 */
+    display: none;  
     position: absolute;
     top: 0;
     left: 0;
     width: 720px; 
     height: 720px;
-    object-fit: contain; /* 保持图片比例并填充整个容器 */
+    object-fit: contain;  
 }
 
 #image_display {
@@ -34,7 +34,7 @@ body {
     left: 0;
     width: 720px; 
     height: 720px;
-    object-fit: contain; /* 保持图片比例并填充整个容器 */
+    object-fit: contain;  
 }
 
 
@@ -42,14 +42,36 @@ body {
     background-color: #008CBA;
 }
 
+#logout-button {
+    background-color: #392fff;
+    color: white;
+    margin: 30px;
+    position: absolute;  
+    top: -10px;  
+    left: 1100px;  
+    vertical-align: top;  
+    border: none;
+    width: 80px;
+    height: 25px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#logout-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+
 #upload-button {
     background-color: #392fff;
     color: white;
     margin: 30px;
-    position: absolute; /* 将按钮设置为绝对定位 */
-    top: 0; /* 与 .content 的顶部对齐 */
-    left: 750px; /* 与 .content 的右侧对齐 */
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    position: absolute;  
+    top: 20px;  
+    left: 750px;  
+    vertical-align: top;  
     border: none;
     width: 163px;
     height: 52px;
@@ -60,17 +82,17 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 #upload-button:hover {
-    background-color: #008CBA; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 #reset-button {
     background-color: #392fff;
     color: white;
     margin: 30px;
-    position: absolute; /* 将按钮设置为绝对定位 */
-    top: 0; /* 与 .content 的顶部对齐 */
-    left: 925px; /* 与 .content 的右侧对齐 */
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    position: absolute;  
+    top: 20px;  
+    left: 925px;  
+    vertical-align: top;  
     border: none;
     width: 163px;
     height: 52px;
@@ -81,29 +103,33 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 #reset-button:hover {
-    background-color: #008CBA; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 #download-button:hover {
-    background-color: #008CBA; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 #prev-button:hover {
-    background-color: #008CBA; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 #next-button:hover {
-    background-color: #008CBA; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+#complete-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 
 #image-counter {
     padding: 15px 50px;
     margin: 30px;
-    position: absolute; /* 将按钮设置为绝对定位 */
-    top: 220px; /* 与 .content 的顶部对齐 */
-    left: 880px; /* 与 .content 的右侧对齐 */
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    position: absolute;  
+    top: 320px;  
+    left: 890px;  
+    vertical-align: top;  
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -117,10 +143,28 @@ body {
     height: 52px;
     text-align: center;
     margin: 30px;
-    position: absolute; /* 将按钮设置为绝对定位 */
-    top: 140px; /* 与 .content 的顶部对齐 */
-    left: 925px; /* 与 .custom-file-button 的右侧对齐 */
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    position: absolute;  
+    top: 230px;  
+    left: 925px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#complete-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute;  
+    top: 160px;  
+    left: 925px;  
+    vertical-align: top;  
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -135,10 +179,10 @@ body {
     height: 52px;
     text-align: center;
     margin: 30px;
-    position: absolute; /* 将按钮设置为绝对定位 */
-    top: 70px; /* 与 .content 的顶部对齐 */
-    left: 750px; /* 与 .content 的右侧对齐 */
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    position: absolute;  
+    top: 90px;  
+    left: 750px;  
+    vertical-align: top;  
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -153,10 +197,10 @@ body {
     height: 52px;
     text-align: center;
     margin: 30px;
-    position: absolute; /* 将按钮设置为绝对定位 */
-    top: 70px; /* 与 .content 的顶部对齐 */
-    left:  925px; /* 与 .custom-file-button 的右侧对齐 */
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    position: absolute;  
+    top: 90px;  
+    left:  925px;  
+    vertical-align: top;  
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -202,14 +246,14 @@ a {
 }
 
 .ptypeBtn {
-    width: 170px; /* 按钮宽度 */
+    width: 170px;  
     margin: 0px 10px;
     border-radius: 5px;
     text-align: center;
-    border: 2px solid rgb(46, 98, 200); /* Add black border with thickness 2px */
+      
 }
 
-/* 将第一行的按钮设为宽度占满父元素 */
+ 
 .pagination:nth-child(1) {
     width: 100%;
 }
@@ -252,61 +296,232 @@ a[href^="#"]::after {
     content: "";
 }
 
-.pagination > .active > a {
+.pagination > .active[data-ptype="1"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgb(51, 122, 183);
-    border-color: rgb(51, 122, 183);
+    background-color: rgba(255, 0, 0, 0.7); 
+    border-color: rgb(255, 0, 0); 
+}
+.pagination > .active[data-ptype="2"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 0, 255, 0.7);  
+    border-color: rgb(0, 0, 255); 
+}
+.pagination > .active[data-ptype="3"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 0, 0.7);  
+    border-color: rgb(0, 128, 0); 
+}
+.pagination > .active[data-ptype="4"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 0, 128, 0.7);  
+    border-color: rgb(128, 0, 128); 
 }
 
-.pagination > .active > a:focus {
+.pagination > .active[data-ptype="5"] > a  {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgb(51, 122, 183);
-    border-color: rgb(51, 122, 183);
+    background-color: rgba(255, 165, 0, 0.7);  
+    border-color: rgb(255, 165, 0); 
+}
+
+.pagination > .active[data-ptype="6"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 192, 203, 0.7);  
+    border-color: rgb(255, 192, 203); 
+}
+
+.pagination > .active[data-ptype="7"] > a  {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 255, 0, 0.7);  
+    border-color: rgb(255, 255, 0); 
+}
+
+.pagination > .active[data-ptype="8"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 255, 255, 0.7);  
+    border-color: rgb(0, 255, 255); 
+}
+
+.pagination > .active[data-ptype="9"] > a  {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 0, 255, 0.7);  
+    border-color: rgb(255, 0, 255); 
+}
+
+.pagination > .active[data-ptype="10"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 128, 0.7);  
+    border-color: rgb(0, 128, 128); 
+}
+
+.pagination > .active[data-ptype="11"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(165, 42, 42, 0.7);  
+    border-color: rgb(165, 42, 42); 
+}
+
+.pagination > .active[data-ptype="12"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);  
+    border-color: rgb(128, 128, 0); 
+}
+
+.pagination > .active[data-ptype="1"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 0, 0, 0.7);  
+    border-color: rgb(255, 0, 0); 
+}
+.pagination > .active[data-ptype="2"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 0, 255, 0.7);  
+    border-color: rgb(0, 0, 255); 
+}
+
+.pagination > .active[data-ptype="3"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 0, 0.7);  
+    border-color: rgb(0, 128, 0); 
+}
+.pagination > .active[data-ptype="4"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 0, 128, 0.7);  
+    border-color: rgb(128, 0, 128); 
+}
+
+.pagination > .active[data-ptype="5"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 165, 0, 0.7);  
+    border-color: rgb(255, 165, 0); 
+}
+
+.pagination > .active[data-ptype="6"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 192, 203, 0.7);  
+    border-color: rgb(255, 192, 203); 
+}
+
+.pagination > .active[data-ptype="7"] > a:focus {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 255, 0, 0.7);  
+    border-color: rgb(255, 255, 0); 
+}
+
+.pagination > .active[data-ptype="8"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 255, 255, 0.7);  
+    border-color: rgb(0, 255, 255); 
+}
+
+.pagination > .active[data-ptype="9"] > a:focus {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 0, 255, 0.7);  
+    border-color: rgb(255, 0, 255); 
+}
+
+.pagination > .active[data-ptype="10"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 128, 0.7);  
+    border-color: rgb(0, 128, 128); 
+}
+
+.pagination > .active[data-ptype="11"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(165, 42, 42, 0.7);  
+    border-color: rgb(165, 42, 42); 
+}
+
+.pagination > .active[data-ptype="12"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);  
+    border-color: rgb(128, 128, 0); 
 }
 
 #label-size-container {
     position: absolute;
     display: inline-block;
     vertical-align: top;
-    top: 265px; /* 与 .content 的顶部对齐 */
-    left: 785px; /* 与 .content 的右侧对齐 */
+    top: 365px;  
+    left: 785px;  
 }
 
 #label-size {
-    width: 60px; /* 设置宽度 */
-    height: 30px; /* 设置高度 */
-    font-size: 18px; /* 设置字体大小 */
-    position: relative;
-    top: 0;
-    left: 0;
+    width: 80px;  
+    height: 30px;  
+    font-size: 18px;  
+    position: absolute;
+    top: -9px;
+    left: 85px;
 }
 label[for="label-size"] {
-    font-size: 18px; /* 设置字体大小 */
+    font-size: 18px;  
 }
 
 
 #image-menu {
-    list-style-type: none; /* 移除默认的列表项标志 */
+    list-style-type: none;  
     padding: 0;
-    position: absolute; /* 绝对定位 */
-    left: 770px; /* 调整水平位置 */
-    top: 300px; /* 调整垂直位置 */
+    position: absolute;  
+    left: 780px;  
+    top: 400px;  
    
 }
 
 #image-menu li.completed > a::before {
-    content: '\2713'; /* 使用 Unicode 符号表示勾 */
-    margin-right: 5px; /* 为了调整勾选框与文本之间的间距 */
-    color: green; /* 设置已完成勾的颜色 */
+    content: '\2713';  
+    margin-right: 5px;  
+    color: green;  
 }
 
 #image-menu li::before {
-    content: none; /* 不显示任何内容 */
-    display: none; /* 不显示前面的内容 */
+    content: none;  
+    display: none;  
 }
 
 
@@ -323,28 +538,28 @@ label[for="label-size"] {
 }
 
 #image-menu li {
-    display: table-row; /* 将列表项显示为表格行 */
+    display: table-row;  
 }
 
 #image-menu li > * {
-    display: table-cell; /* 将列表项内的元素显示为表格单元格 */
-    padding: 5px; /* 设置单元格内边距 */
-    border-bottom: 1px solid #ccc; /* 添加底部边框 */
-    vertical-align: middle; /* 垂直居中 */
+    display: table-cell;  
+    padding: 5px;  
+    border-bottom: 1px solid #ccc;  
+    vertical-align: middle;  
     
 }
 
 #image-menu li > a {
-    text-decoration: underline; /* 移除超链接的下划线 */
-    color: black; /* 默认字体颜色为黑色 */
+    text-decoration: underline;  
+    color: black;  
     
 }
 
 .selection-rect {
     position: absolute;
-    border: 2px dashed #00BFFF;  /* 虛線邊框，顏色可自定 */
-    background-color: rgba(0, 191, 255, 0.2);  /* 半透明背景，顏色可自定 */
-    z-index: 10;  /* 確保矩形在其他元素之上 */
+    border: 2px dashed #00BFFF;   
+    background-color: rgba(0, 191, 255, 0.2);   
+    z-index: 10;   
 }
 
 .detection-box, .overlay-div {
@@ -355,14 +570,14 @@ label[for="label-size"] {
 
 #format-select {
     position: absolute;
-    top: 140px;
+    top: 230px;
     margin: 30px;
-    left: 750px; /* 与 .custom-file-button 的右侧对齐 */
+    left: 750px;  
     font-size: 16px;
     background-color: #ff902f;
     color: white;
     text-align: center;
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    vertical-align: top;  
     border: none;
     border-radius: 5px;
     width: 163px;
@@ -370,16 +585,16 @@ label[for="label-size"] {
     transition: background-color 0.3s, color 0.3s;
 }
 #format-select:hover {
-    background-color: #efc483; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #efc483;  
+    color: #ffffff;  
 }
 #download-status {
     padding: 15px 50px;
     margin: 30px;
-    position: absolute; /* 将按钮设置为绝对定位 */
-    top: 185px; /* 与 .content 的顶部对齐 */
-    left: 705px; /* 与 .content 的右侧对齐 */
-    vertical-align: top; /* 保持与图片顶部对齐 */
+    position: absolute;  
+    top: 280px;  
+    left: 705px;  
+    vertical-align: top;  
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -442,16 +657,100 @@ label[for="label-size"] {
 }
 
 #firstSetBtn:hover {
-    background-color: #008CBA; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 
 #secondSetBtn:hover {
-    background-color: #008CBA; /* 鼠标悬停时的背景色 */
-    color: #ffffff; /* 鼠标悬停时的文本颜色 */
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 
 .content,
 nav {
     display: none;
 }
+
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+}
+
+form{
+    height: 430px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 0px 35px;
+}
+
+form h3{
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: center;
+}
+#username_label{
+    display: block;
+    margin-top: 0px;
+    font-size: 20px;
+    font-weight: 500;
+}
+#password_label{
+    display: block;
+    margin-top: 0px;
+    font-size: 20px;
+    font-weight: 500;
+}
+input{
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+::placeholder{
+    color: #e5e5e5;
+}
+
+#submit_button{
+    margin-top: 25px;
+    width: 100%;
+    background-color: #392fff;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+
