@@ -4,6 +4,7 @@ let images = [];
 let imagesName = [];
 let currentImageIndex = 0;
 let menuItemsCompleted = [];
+let completedImageName = [];
 let labels = [];
 let prev_index = -1;
 let change = false;
@@ -31,20 +32,55 @@ const classColors = {
 };
 let anno_ids = []
 
-document.addEventListener('DOMContentLoaded', function() {
-     // 显示登录框
-    /*
-    document.getElementById("form_container").style.display = "block";
+function submitForm(event) {
+    event.preventDefault(); // 阻止默认表单提交行为
 
-    setTimeout(function() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    fetch('/validate_password', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username: username,
+            password: password
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            // 登录成功，隐藏登录表单，显示内容
+            document.getElementById("form_container").style.display = "none";
+            document.querySelector(".content").style.display = "block";
+            document.querySelector("nav").style.display = "block";
+            localStorage.setItem('username', username);
+        } else {
+            // 登录失败，显示错误消息
+            console.error('Login failed');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+window.onload = function() {
+    const username = localStorage.getItem('username');
+    if (username) {
+        // 如果有保存的用户名，则隐藏登录表单，显示内容
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
         document.querySelector("nav").style.display = "block";
-    }, 3000); // 这里模拟3秒后登录成功
-    */
-    document.getElementById("form_container").style.display = "none";
-    document.querySelector(".content").style.display = "block";
-    document.querySelector("nav").style.display = "block";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+     // 显示登录框
+    
+    document.getElementById("form_container").style.display = "block";
+
+
 
     document.getElementById('upload-button').addEventListener('click', function () {
         document.getElementById('file-input').click();
@@ -72,6 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('download-button').addEventListener('click', async function () {
+        completedImageName.push(imagesName[currentImageIndex])
         menuItemsCompleted.push(currentImageIndex)
         markImageAsCompleted(currentImageIndex); 
         downloadImage();
@@ -131,6 +168,15 @@ document.addEventListener('DOMContentLoaded', function() {
         ptype = 1;
     });
 
+    const logoutBtn = document.getElementById('logout-button');
+    logoutBtn.addEventListener('click', function() {
+        localStorage.removeItem('username');
+    
+        // 显示登录表单，隐藏内容
+        document.getElementById("form_container").style.display = "block";
+        document.querySelector(".content").style.display = "none";
+        document.querySelector("nav").style.display = "none";
+    })
 });
 
 function handleFileSelect(event) {
@@ -759,7 +805,7 @@ function imageMouseOverHandler(event) {
     overlayDiv.style.width = `${divSize}px`;
     overlayDiv.style.height = `${divSize}px`;
     overlayDiv.style.backgroundColor = classColors[ptype - 1];
-    overlayDiv.style.opacity = '0.3';
+    overlayDiv.style.opacity = '0.5';
     overlayDiv.style.border = '2px dashed #000';
     overlayDiv.style.pointerEvents = 'none';
     document.getElementById('image-container').appendChild(overlayDiv);

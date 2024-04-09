@@ -17,6 +17,7 @@ from datetime import datetime
 app = Flask(__name__)
 class1 = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶園"]
 class2 = ["果園", "茶畑", "桑畑", "沼田", "水田", "乾田", "荒地", "樹林椶櫚科", "竹林", "樹林鍼葉", "樹林濶葉", "草地"]
+classes = [class1, class2]
 
 @app.route('/')
 def index():
@@ -109,7 +110,7 @@ def save_annotations():
             y1 = y - h / 2
             x2 = x + w / 2
             y2 = y + h / 2
-            writer.addObject(class1[id], x1, y1, x2, y2)
+            writer.addObject(classes[set][id], x1, y1, x2, y2)
         writer.save(os.path.join(voc_folder_path, f'{image_name}.xml'))
         
     elif format_type == 'coco':
@@ -163,7 +164,7 @@ def save_annotations():
             shutil.copy("./annotations_template/annotations.csv", annotations_path)
         new_annos = []
         for label in yolo_labels:
-            new_anno = yolo2tensorflow(label, f'{image_name}.jpg', 480)
+            new_anno = yolo2tensorflow(label, set, f'{image_name}.jpg', 480)
             new_annos.append(new_anno)
         with open(os.path.join(annotations_path, "annotations.csv"), "a", newline="") as f:
             writer = csv.writer(f)
@@ -199,7 +200,7 @@ def yolo2coco(yololabels, image_id, anno_id, img_size):
     }
     return new_annotation
 
-def yolo2tensorflow(yololabels, image_name, img_size):
+def yolo2tensorflow(yololabels, class_set, image_name, img_size):
     id, x, y, w, h, _ = yololabels.values()
     
     x *= img_size
@@ -210,8 +211,21 @@ def yolo2tensorflow(yololabels, image_name, img_size):
     y1 = y - h / 2
     x2 = x + w / 2
     y2 = y + h / 2
-    new_annotation = [image_name, img_size, img_size, class1[id], x1, y1, x2, y2]
+    new_annotation = [image_name, img_size, img_size, classes[class_set][id], x1, y1, x2, y2]
     return new_annotation
+
+@app.route('/validate_password', methods=['POST'])
+def validate_password():
+    data = request.json
+    username_input = data["username"]
+    password_input = data["password"]
+    with open("./accounts.yaml", "r") as f:
+        user_info = yaml.safe_load(f)
+    true_password = user_info[username_input]
+    if password_input == true_password:
+        return jsonify({'success': True}), 200
+    else:
+        return jsonify({'success': False, 'message': 'Incorrect username or password'}), 401
 
 if __name__ == '__main__':
     if not os.path.exists("./Annotations"): 

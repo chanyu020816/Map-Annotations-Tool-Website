@@ -450,3 +450,8 @@ label[for="label-size"] {
     background-color: #008CBA; /* 鼠标悬停时的背景色 */
     color: #ffffff; /* 鼠标悬停时的文本颜色 */
 }
+
+.content,
+nav {
+    display: none;
+}

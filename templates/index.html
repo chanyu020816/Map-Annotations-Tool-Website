@@ -4,19 +4,35 @@
     <head> 
         <meta charset="UTF-8">
         <title>Annotation Tool</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <link rel="stylesheet" href="../static/style.css">
+        
+        <script src="../static/script.js"></script>
+        
+
     </head>
 
     <body> 
+        <div class="form-container" id="form_container" style="disply: none;">
+            <form onsubmit="submitForm(event)">
+                <div class="form" style="disply: none;">
+                    <label>  User Login </label>
+                    <br/>
+                    <input id="username" placeholder="enter username"/>
+                    <br/>
+                    <input type="password" id="password" placeholder="enter passowrd"/>
+                    <br/>
+                    <button type="submit" class="btn">Log in</button>
+                </div>
+            </form>
+        </div>
         <div class="content">
             <div class="image-container" id="image-container">
                 <img id="image-display" src="" alt="圖片預覽">
             </div>
             <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
-            <button id="upload-button">選擇圖片</button>
+            <button id="upload-button">上傳圖片</button>
             <button id="reset-button">重新標註</button>
-            <button id="download-button">下載圖片</button>
+            <button id="download-button">完成標註</button>
             <button id="prev-button">前一張圖</button>
             <button id="next-button">下一張圖</button>
             <div class="control-group" id="label-size-container">
@@ -31,7 +47,7 @@
                 <option value="tensorflow">Tensorflow Format</option>
               </select>
             <div id="download-status"> </div>
-            
+            <button id="logout-button">登出</button>
         </div>
         <nav aria-label="Page navigation">
 
@@ -155,7 +171,7 @@
                 <li class="ptype" data-ptype="8">
                     <a class="ptypeBtn" data-ptype="8" href="#">
                         樹林椶櫚科
-                        <img src="{{ url_for('static', filename='images/class2-8.png') }}" 
+                        <img src="../static/images/class2-8.png" 
                         alt="图片" style="width: 150px; height: 100px; vertical-align: bottom; margin-bottom: 10px; border: 2px solid black;">
                     </a>
                 </li>
@@ -164,7 +180,7 @@
                 <li class="ptype" data-ptype="9">
                     <a class="ptypeBtn" data-ptype="9" href="#">
                         竹林
-                        <img src="{{ url_for('static', filename='images/bamboo.png') }}" 
+                        <img src="../static/images/bamboo.png" 
                              alt="图片" style="width: 150px; height: 100px; vertical-align: bottom; margin-bottom: 10px; border: 2px solid black;">
                     </a>
                 </li>
