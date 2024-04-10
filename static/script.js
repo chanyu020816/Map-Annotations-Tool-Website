@@ -750,8 +750,6 @@ async function downloadImage() {
         const label = labels[currentImageIndex]
 
         try {
-            const folderHandle = await openFolderDialog();
-            const folderPath = folderHandle.name; 
             downloadStatus.textContent = `正在儲存 ${imageName} ...`;
             await fetch('/save_image', {
                 method: 'POST',
@@ -763,7 +761,6 @@ async function downloadImage() {
                     image_name: imageName,
                     format_type: format_type,
                     class_set: classSet,
-                    folder_path: folderPath,
                     username: localStorage.getItem('username')
                 })
             });
@@ -778,7 +775,6 @@ async function downloadImage() {
                     yolo_labels: label,
                     img_size:  split_size,
                     class_set: classSet,
-                    folder_path: folderPath,
                     username: localStorage.getItem('username')
                 })
             });
