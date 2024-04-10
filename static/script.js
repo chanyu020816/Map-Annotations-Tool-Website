@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("form_container").style.display = "block";
         document.querySelector(".content").style.display = "none";
         document.querySelector("nav").style.display = "none";
+        document.getElementById("image-menu").style.display = "none";
     })
 });
 

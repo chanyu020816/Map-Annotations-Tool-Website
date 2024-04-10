@@ -154,9 +154,7 @@ def save_image():
     image_name = data["image_name"]
     format_type = data["format_type"]
     set = data["class_set"]
-    folder_path = data["folder_path"]
     username = data["username"]
-    print(folder_path)
     if format_type == "yolo":
         image_folder_path = os.path.join("Annotations", f"Yolo_AnnotationsSet{set}", "images")
         if not os.path.exists(os.path.join("Annotations", f"Yolo_AnnotationsSet{set}")):
@@ -193,7 +191,7 @@ def save_image():
     image.save(output_path)
     
     with open(os.path.join("Annotations", 'log.txt'), "w") as f:
-        f.write(f'User{username} labeled image {image_name} at {datetime.now()}')
+        f.write(f"User {username} labeled the image {image_name} at {datetime.now()}.")
     return jsonify({'message': 'Image Saved Successfully.'})
 
 @app.route('/save_annotations', methods=['POST'])
