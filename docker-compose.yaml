@@ -1,0 +1,22 @@
+version: '3'
+services:
+  # web:
+  #  container_name: flask_app
+  #  build: .
+  #  ports:
+  #    - "8000:8000"
+  #  depends_on:
+  #    - db
+  #  volumes:
+  #    - ./app.py:/website/app.py 
+  db:
+    image: mysql:5.7
+    restart: always
+    platform: linux/amd64  # Specify platform architecture
+    ports:
+      - "3306:3306"  # Map MySQL port to local machine
+    environment:
+      MYSQL_ROOT_PASSWORD: symboldetection
+      MYSQL_DATABASE: symboldetection
+      MYSQL_USER: admin01
+      MYSQL_PASSWORD: symboldetection

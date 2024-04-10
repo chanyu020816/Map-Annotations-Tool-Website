@@ -15,5 +15,6 @@ EXPOSE 8000
 
 CMD ["python", "app.py"]
 
-# docker build -t map_ano
+# docker build -t map_ano .
 # docker run -p 8000:8000 --rm --mount src="$(pwd)",target=/website,type=bind map_ano
+# docker run -p 8000:8000 --rm --mount src="$(pwd)",target=/website,type=bind map_ano python app.py

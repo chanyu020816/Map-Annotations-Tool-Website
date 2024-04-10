@@ -56,8 +56,8 @@ function submitForm(event) {
             document.querySelector("nav").style.display = "block";
             localStorage.setItem('username', username);
         } else {
-            // 登录失败，显示错误消息
-            console.error('Login failed');
+            const loginStatus = document.getElementById('login-status')
+            loginStatus.textContent = "Password Incorrect"
         }
     })
     .catch(error => {
@@ -751,7 +751,7 @@ async function downloadImage() {
 
         try {
             const folderHandle = await openFolderDialog();
-            const folderPath = folderHandle.name; // 获取文件夹路径
+            const folderPath = folderHandle.name; 
             downloadStatus.textContent = `正在儲存 ${imageName} ...`;
             await fetch('/save_image', {
                 method: 'POST',
@@ -763,7 +763,8 @@ async function downloadImage() {
                     image_name: imageName,
                     format_type: format_type,
                     class_set: classSet,
-                    folder_path: folderPath
+                    folder_path: folderPath,
+                    username: localStorage.getItem('username')
                 })
             });
             await fetch('/save_annotations', {
@@ -776,7 +777,9 @@ async function downloadImage() {
                     format_type: format_type,
                     yolo_labels: label,
                     img_size:  split_size,
-                    class_set: classSet
+                    class_set: classSet,
+                    folder_path: folderPath,
+                    username: localStorage.getItem('username')
                 })
             });
             downloadStatus.textContent = '下載成功!';
@@ -809,7 +812,7 @@ function imageMouseOverHandler(event) {
     overlayDiv.style.height = `${divSize}px`;
     overlayDiv.style.backgroundColor = classColors[ptype - 1];
     overlayDiv.style.opacity = '0.5';
-    overlayDiv.style.border = '2px dashed #000';
+
     overlayDiv.style.pointerEvents = 'none';
     document.getElementById('image-container').appendChild(overlayDiv);
 
