@@ -848,34 +848,40 @@ function add_parent_child_images(parentImage, childImages) {
         }
         return response.json();
     })
-    .then(data => {
-        console.log(data.exists);
-    })
     .catch(error => {
         console.error('There was a problem with your fetch operation:', error);
     });
 }
 
-function downloadFiles() {
-    const downloadStatus = document.getElementById('download-status')
-    if (completedImageName.length >= 0) {
-        fetch('/download', {
-            method: 'POST', // 使用 POST 方法发送数据
+function download_labeled_images() {
+    const downloadStatus = document.getElementById('download-status');
+    if (completedImageName.length > 0) {
+        const queryString = `?class_set=${encodeURIComponent(classSet)}&filenames=${encodeURIComponent(JSON.stringify(completedImageName))}&format_type=${encodeURIComponent(format_type)}`;
+        fetch(`/download_annotations${queryString}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ filenames: completedImageName }) // 将文件名列表转换为 JSON 格式并发送
-        })
-            .then(response => {
-                // 处理响应
-            })
-            .catch(error => {
-                console.error('Error occurred while sending request:', error);
-            });
+            }
+        }).then(response => {
+            // 根据响应状态码检查下载状态
+            if (response.ok) {
+                // 创建一个 <a> 元素来触发下载
+                const link = document.createElement('a');
+                link.href = response.url;
+                link.download = 'annotations.zip';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                downloadStatus.textContent = '下载失败，请重试.';
+            }
+        }).catch(error => {
+            console.error('发送请求时出错:', error);
+            downloadStatus.textContent = '下载失败，请重试.';
+        });
     } else {
-        downloadStatus.textContent = '沒有圖片可下載.';
+        downloadStatus.textContent = '没有可下载的图片.';
     }
-    
 }
 
 function imageMouseOverHandler(event) {

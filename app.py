@@ -99,7 +99,7 @@ class LabelHistory(db.Model):
     image = db.relationship('Image', backref=db.backref('label_history', lazy=True))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)   
     label_date =  db.Column(db.DateTime, default=datetime.now)
-    label_file_path = db.Column(db.String(200), unique=True, nullable=False)
+    label_file_path = db.Column(db.String(200), nullable=False)
     
     def __init__(self, image_id, user_id, label_date, label_file_path):
         self.image_id = image_id
@@ -206,7 +206,7 @@ def save_image():
     image.save(os.path.join(server_image_folder_path, f'{image_name}.jpg'))
     
     with open(os.path.join("Annotations", 'log.csv'), "a") as f:
-        f.write(f"{username}, {image_name}, {datetime.now()} \n")
+        f.write(f"{username}, {image_name}.jpg, {datetime.now()} \n")
     return jsonify({'message': 'Image Saved Successfully.'})
 
 @app.route('/save_annotations', methods=['POST'])
@@ -329,9 +329,25 @@ def save_annotations():
         os.mkdir(label_folder_path)
     output_path = os.path.join(label_folder_path, f'{image_name}.txt')
     with open(output_path, 'w') as file:
+        
         for label in yolo_labels:
             id, x, y, w, h, _ = label.values()
             file.write(f'{id} {x} {y} {w} {h} ' + '\n')
+    
+        writer = Writer(os.path.join("Annotations", f"Server_AnnotationsSet{set}", f'{image_name}.jpg'), image_size, image_size)
+        for label in yolo_labels:
+            id, x, y, w, h, _ = label.values()
+            x *= image_size
+            y *= image_size
+            w *= image_size
+            h *= image_size
+            x1 = x - w / 2
+            y1 = y - h / 2
+            x2 = x + w / 2
+            y2 = y + h / 2
+            writer.addObject(classes[set][id], x1, y1, x2, y2)
+        writer.save(os.path.join(label_folder_path, f'{image_name}.xml'))
+        
     return jsonify({'message': 'Success'})
 
 def yolo2coco(yololabels, image_id, anno_id, img_size):
@@ -454,7 +470,6 @@ def add_labels():
     db.session.commit()
     label_history_id = label_history.id
     
-    print(label_history_id)
     # add labels
     for label in yolo_labels:
         id, x, y, w, h, _ = label.values()
@@ -469,18 +484,31 @@ def add_labels():
 
 @app.route('/download_annotations', methods=['GET'])
 def download_annotations():
-    data = request.json
-    completed_file_name = data['filenames']
-    label_file_path = "../annotations/label.txt"
-    image_file_path = "../annotations/image.png"
-
-    # 创建zip文件
+    class_set = request.args.get('class_set')
+    completed_file_names = request.args.get('filenames').split(',')
+    format_type = request.args.get('format_type')
+    print(format_type)
+    
     zip_filename = 'annotations.zip'
+    print(completed_file_names)
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
-        # 添加标签文件到 "label" 文件夹中
-        zipf.write(label_file_path, arcname=os.path.join("label", os.path.basename(label_file_path)))
-        # 添加图像文件到 "image" 文件夹中
-        zipf.write(image_file_path, arcname=os.path.join("image", os.path.basename(image_file_path)))
+        for file in completed_file_names:
+            filename = re.sub(r'\s+', '_', file)
+            replace_chars = {"[": "", "]": "", "\"": ""}
+            filename = "".join(replace_chars.get(c, c) for c in filename)
+            
+            if format_type == "yolo":
+                image_file_path = os.path.join("./Annotations", f"Server_AnnotationsSet{class_set}", "images", f'{filename}.jpg')
+                label_file_path = os.path.join("./Annotations", f"Server_AnnotationsSet{class_set}", "labels", f'{filename}.txt')
+
+                zipf.write(image_file_path, arcname=os.path.join("images", os.path.basename(image_file_path)))
+                zipf.write(label_file_path, arcname=os.path.join("labels", os.path.basename(label_file_path)))
+            else:
+                image_file_path = os.path.join("./Annotations", f"Server_AnnotationsSet{class_set}", "images", f'{filename}.jpg')
+                label_file_path = os.path.join("./Annotations", f"Server_AnnotationsSet{class_set}", "labels", f'{filename}.xml')
+
+                zipf.write(image_file_path, arcname=os.path.join("annotations", os.path.basename(image_file_path)))
+                zipf.write(label_file_path, arcname=os.path.join("annotations", os.path.basename(label_file_path)))
 
     # 提供 zip 文件给前端下载
     return send_file(zip_filename, as_attachment=True)
