@@ -600,7 +600,6 @@ function deleteImage(index) {
             }
         }
         // 直接删除图像和菜单项
-        console.log(imagesName[index])
         completedImageName = completedImageName.filter(name => name !== imagesName[index]) 
         images.splice(index, 1);
         imagesName.splice(index, 1);
@@ -723,7 +722,12 @@ function updateImageCounter(index) {
 
 // reset all labels
 function labelreset() {
+    completedImageName = completedImageName.filter(name => name !== imagesName[currentImageIndex]) 
     labels[currentImageIndex] = []
+    const menuItem = document.getElementById(`menu-item-${currentImageIndex}`);
+    if (menuItem) {
+        menuItem.classList.remove('completed'); // 添加已完成样式
+    }
     annotations[currentImageIndex] = []
     anno_ids[currentImageIndex] = 0
     const imageContainer = document.getElementById('image-container');
