@@ -8,7 +8,7 @@ let completedImageName = [];
 let labels = [];
 let prev_index = -1;
 let change = false;
-let detections = []; // 用來儲存所有圖片的檢測結果
+let detections = []; 
 let paddings = []
 let ptype = 1;
 let classSet = 1;
@@ -33,7 +33,7 @@ const classColors = {
 let anno_ids = []
 
 function submitForm(event) {
-    event.preventDefault(); // 阻止默认表单提交行为
+    event.preventDefault(); 
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
@@ -50,7 +50,7 @@ function submitForm(event) {
     })
     .then(response => {
         if (response.ok) {
-            // 登录成功，隐藏登录表单，显示内容
+            
             document.getElementById("form_container").style.display = "none";
             document.querySelector(".content").style.display = "block";
             document.querySelector("nav").style.display = "block";
@@ -68,7 +68,7 @@ function submitForm(event) {
 window.onload = function() {
     const username = localStorage.getItem('username');
     if (username) {
-        // 如果有保存的用户名，则隐藏登录表单，显示内容
+        
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
         document.querySelector("nav").style.display = "block";
@@ -76,7 +76,7 @@ window.onload = function() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-     // 显示登录框
+     
     
     document.getElementById("form_container").style.display = "block";
 
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     liItems.forEach(li => {
         li.addEventListener('click', function() {
             ptype = parseInt(this.getAttribute('data-ptype'));  
-            // 點到的變ptype active 其他的移除active
+            
             liItems.forEach(item => {
                 if (item === this) {
                     item.classList.add('ptype', 'active');
@@ -111,7 +111,11 @@ document.addEventListener('DOMContentLoaded', function() {
         completedImageName.push(imagesName[currentImageIndex])
         menuItemsCompleted.push(currentImageIndex)
         markImageAsCompleted(currentImageIndex); 
-        downloadImage();
+        complete_label_image();
+    });
+
+    document.getElementById('download-button').addEventListener('click', async function () {
+        download_labeled_images()
     });
 
     const formatSelect = document.getElementById('format-select');
@@ -119,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         format_type = formatSelect.value;
     });
 
-    // 获取按钮和内容列表
+    
     const firstSetBtn = document.getElementById('firstSetBtn');
     const secondSetBtn = document.getElementById('secondSetBtn');
     const pagination1_1 = document.getElementById('pagination1_1');
@@ -128,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pagination2_2 = document.getElementById('pagination2_2');
     const pagination2_3 = document.getElementById('pagination2_3');
 
-    // 第一个按钮点击事件，显示第一套内容，隐藏第二套内容
+    
     firstSetBtn.addEventListener('click', function() {
         classSet = 1;
         pagination1_1.style.display = 'block';
@@ -148,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ptype = 1;
     });
 
-    // 第二个按钮点击事件，显示第二套内容，隐藏第一套内容
+    
     secondSetBtn.addEventListener('click', function() {
         classSet = 2;
         pagination1_1.style.display = 'none';
@@ -172,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     logoutBtn.addEventListener('click', function() {
         localStorage.removeItem('username');
     
-        // 显示登录表单，隐藏内容
+        
         document.getElementById("form_container").style.display = "block";
         document.querySelector(".content").style.display = "none";
         document.querySelector("nav").style.display = "none";
@@ -196,10 +200,10 @@ function handleFileSelect(event) {
     imageContainer.addEventListener('mouseover', imageMouseOverHandler);
     imageContainer.addEventListener('mouseout', imageMouseOutHandler);
     setTimeout(() => {
-        downloadStatus.textContent = '已完成圖片上傳'; // 更新状态文本
+        downloadStatus.textContent = '已完成圖片上傳'; 
     }, 10000);
     setTimeout(() => {
-        downloadStatus.textContent = ''; // 清除状态文本
+        downloadStatus.textContent = ''; 
     }, 5000);
     
 }
@@ -233,6 +237,15 @@ function splitImage(image, file, size) {
     const newW = numW * size;
     const padH = Math.ceil((newH - image.height) / 2);
     const padW = Math.ceil((newW - image.width) / 2);
+
+    const parentImage = {
+        name: file.name,
+        width: image.width,
+        height: image.height, 
+        split_size: size
+    }
+    const childImages = [];
+    console.log(file.name)
     canvas.height = newH;
     canvas.width = newW;
     ctx.fillStyle = '#000000';
@@ -250,7 +263,8 @@ function splitImage(image, file, size) {
     );
     const images = [];
     const imageNames = [];
-    const fileName = file.name.split('.')[0];
+   
+    const fileName = file.name.split('.').slice(0, -1).join('.');
     
     for (let h = 0; h < numH; h++) {
         for (let w = 0; w < numW; w++) {
@@ -273,16 +287,24 @@ function splitImage(image, file, size) {
             images.push(imageDataURL);
             const imageName = `${fileName}_h${h}_w${w}`;
             imageNames.push(imageName);
-            detections.push([]); // Initialize detections array for each image
+            detections.push([]);
             labels.push([])
             annotations.push([])
             anno_ids.push(0)
             const padding = createPadding(h, w, numH, numW, size, padH, padW)
             paddings.push([padding])
+            child_img = {
+                name: imageName,
+                location: [h, w],
+                paddings: padding
+            };
+            childImages.push(child_img)
         }
     }
+    add_parent_child_images(parentImage, childImages)
     return [images, imageNames];
 }
+
 function createPadding(h, w, numH, numW, size, padH, padW) {
     /*
     type (x, y -> px, py):
@@ -577,7 +599,9 @@ function deleteImage(index) {
                 menuItemsCompleted[i] -= 1;
             }
         }
-        // 直接删除图像和菜单项 
+        // 直接删除图像和菜单项
+        console.log(imagesName[index])
+        completedImageName = completedImageName.filter(name => name !== imagesName[index]) 
         images.splice(index, 1);
         imagesName.splice(index, 1);
         detections.splice(index, 1);
@@ -743,7 +767,7 @@ function bboxAdjust(x, y, bbox_size, ratio, paddings_list) {
     return [xcenter, ycenter, width, height]
 }
 
-async function downloadImage() {
+async function complete_label_image() {
     const downloadStatus = document.getElementById('download-status')
     if (images[currentImageIndex]) {
         const imageData = images[currentImageIndex]
@@ -779,17 +803,79 @@ async function downloadImage() {
                     username: localStorage.getItem('username')
                 })
             });
-            downloadStatus.textContent = '下載成功!';
+            await fetch('/add_labels_db', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: localStorage.getItem('username'),
+                    image_name: imageName, 
+                    yolo_labels: label,
+                    class_set: classSet
+                })
+            });
+            downloadStatus.textContent = '標註成功!';
             setTimeout(() => {
                 downloadStatus.textContent = ''; // 清除下载状态文本
             }, 10000);
         } catch (error) {
             console.error('error: ', error)
-            downloadStatus.textContent = '下載失敗.';
+            downloadStatus.textContent = '';
         }
+    } else {
+        downloadStatus.textContent = '沒有圖片可以標註.';
+    }
+}
+
+function add_parent_child_images(parentImage, childImages) {
+    const data = {
+        username: localStorage.getItem('username'),
+        parent_image: parentImage,
+        child_images: childImages
+    }
+
+    fetch('/add_img_db', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.exists);
+    })
+    .catch(error => {
+        console.error('There was a problem with your fetch operation:', error);
+    });
+}
+
+function downloadFiles() {
+    const downloadStatus = document.getElementById('download-status')
+    if (completedImageName.length >= 0) {
+        fetch('/download', {
+            method: 'POST', // 使用 POST 方法发送数据
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ filenames: completedImageName }) // 将文件名列表转换为 JSON 格式并发送
+        })
+            .then(response => {
+                // 处理响应
+            })
+            .catch(error => {
+                console.error('Error occurred while sending request:', error);
+            });
     } else {
         downloadStatus.textContent = '沒有圖片可下載.';
     }
+    
 }
 
 function imageMouseOverHandler(event) {
@@ -836,6 +922,7 @@ function imageMouseOutHandler() {
         overlayDiv.remove();
     }
 }
+
 
 
 /*

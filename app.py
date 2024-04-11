@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify, send_file
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
 from flask_cors import CORS
+import re
+import zipfile
 from PIL import Image as pilImage
 import io
 import base64
@@ -45,13 +47,15 @@ class ParentImage(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     imagename = db.Column(db.String(80), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     width = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Integer, nullable=False)
     split_size = db.Column(db.Integer, nullable=False)
     upload_date = db.Column(db.DateTime, default=datetime.now)
     
-    def __init__(self, imagename, width, height, split_size):
+    def __init__(self, imagename, user_id, width, height, split_size):
         self.imagename = imagename
+        self.user_id = user_id
         self.width = width
         self.height = height
         self.split_size = split_size
@@ -95,7 +99,7 @@ class LabelHistory(db.Model):
     image = db.relationship('Image', backref=db.backref('label_history', lazy=True))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)   
     label_date =  db.Column(db.DateTime, default=datetime.now)
-    label_file_path = db.Column(db.String(80), unique=True, nullable=False)
+    label_file_path = db.Column(db.String(200), unique=True, nullable=False)
     
     def __init__(self, image_id, user_id, label_date, label_file_path):
         self.image_id = image_id
@@ -113,14 +117,16 @@ class Labels(db.Model):
     label_history_id = db.Column(db.Integer, db.ForeignKey('labelhistory.id'), nullable=False)
     label_history = db.relationship('LabelHistory', backref=db.backref('labels', lazy=True))
     class_set = db.Column(db.Integer, nullable=False)
+    class_id = db.Column(db.Integer, nullable=False)
     x_center = db.Column(db.Float, nullable=False)   
     y_center = db.Column(db.Float, nullable=False)   
     width = db.Column(db.Float, nullable=False)   
     height = db.Column(db.Float, nullable=False)   
     
-    def __init__(self, label_history_id, class_set, x_center, y_center, width, height):
+    def __init__(self, label_history_id, class_set, id, x_center, y_center, width, height):
         self.label_history_id = label_history_id
         self.class_set = class_set
+        self.class_id = id
         self.x_center = x_center
         self.y_center = y_center
         self.width = width
@@ -133,13 +139,13 @@ def create_tables():
     with app.app_context():
         if not inspect(db.engine).has_table("users"):
             db.create_all()
-            admin = User(username="admin", password="adminps", role="admin")
-            user01 = User(username="user01", password="user01ps", role="user")
-            # user02 = User(username="user02", password="user02ps", role="user")
+            admin = User(username="admin", password="I3aIO0GapcxfT7WP", role="admin")
+            user01 = User(username="user01", password="T5Do9EAtQAqTtfR4O", role="user")
+            user02 = User(username="user02", password="5gQEcay2DTJO8Fs2joQj", role="user")
             
             db.session.add(admin)
             db.session.add(user01)
-            # db.session.add(user02)
+            db.session.add(user02)
             db.session.commit()
         
 
@@ -152,6 +158,7 @@ def save_image():
     data = request.json
     image_data = data['image_data']
     image_name = data["image_name"]
+    image_name = re.sub(r'\s+', '_', image_name)
     format_type = data["format_type"]
     set = data["class_set"]
     username = data["username"]
@@ -190,14 +197,23 @@ def save_image():
     image = image.convert('RGB')
     image.save(output_path)
     
-    with open(os.path.join("Annotations", 'log.txt'), "w") as f:
-        f.write(f"User {username} labeled the image {image_name} at {datetime.now()}.")
+    # save to server
+    server_image_folder_path = os.path.join("Annotations", f"Server_AnnotationsSet{set}", "images")
+    if not os.path.exists(os.path.join("Annotations", f"Server_AnnotationsSet{set}")):
+        os.mkdir(os.path.join("Annotations", f"Server_AnnotationsSet{set}"))
+    if not os.path.exists(server_image_folder_path):
+        os.mkdir(server_image_folder_path)
+    image.save(os.path.join(server_image_folder_path, f'{image_name}.jpg'))
+    
+    with open(os.path.join("Annotations", 'log.csv'), "a") as f:
+        f.write(f"{username}, {image_name}, {datetime.now()} \n")
     return jsonify({'message': 'Image Saved Successfully.'})
 
 @app.route('/save_annotations', methods=['POST'])
 def save_annotations():
     data = request.json
     image_name = data["image_name"]
+    image_name = re.sub(r'\s+', '_', image_name)
     format_type = data["format_type"]
     yolo_labels = data["yolo_labels"]
     image_size = data["img_size"]
@@ -306,6 +322,16 @@ def save_annotations():
             for label in yolo_labels:
                 id, x, y, w, h = label.values()
                 file.write(f'{id} {x} {y} {w} {h} ' + '\n')
+
+    # save to server
+    label_folder_path = os.path.join("Annotations", f"Server_AnnotationsSet{set}", "labels")
+    if not os.path.exists(label_folder_path):
+        os.mkdir(label_folder_path)
+    output_path = os.path.join(label_folder_path, f'{image_name}.txt')
+    with open(output_path, 'w') as file:
+        for label in yolo_labels:
+            id, x, y, w, h, _ = label.values()
+            file.write(f'{id} {x} {y} {w} {h} ' + '\n')
     return jsonify({'message': 'Success'})
 
 def yolo2coco(yololabels, image_id, anno_id, img_size):
@@ -354,14 +380,17 @@ def validate_password():
     else:
         return jsonify({'success': False, 'message': 'Incorrect username or password'}), 401
     
-@app.route('/add_parentimg', methods=['POST'])
-def add_parentimg():
+@app.route('/add_img_db', methods=['POST'])
+def add_img_db():
     data = request.json
-    img_name = data["image_name"]
-    width = data["width"]
-    height = data["height"]
-    split_size = data["split_size"]
-    print(img_name, width, height, split_size)
+    username = data["username"]
+    parentimg = data["parent_image"]
+    child_imgs = data["child_images"]
+    img_name = parentimg['name']
+    width = parentimg['width']
+    height = parentimg['height']
+    split_size = parentimg['split_size']
+    img_name = re.sub(r'\s+', '_', img_name)
     existing_parentimg = ParentImage.query.filter_by(
         imagename=img_name,
         width=width,
@@ -370,22 +399,92 @@ def add_parentimg():
     ).first()
     
     if existing_parentimg:
-        return jsonify({'exists': True, 'parent_image_id': existing_parentimg.id}), 200
+        return jsonify({'success': True}), 200
     else:
-        parentimg = ParentImage(img_name, width, height, split_size)
+        user = User.query.filter_by(username=username).first()
+        user_id = user.id
+        # add parent image to db
+        parentimg = ParentImage(img_name, user_id, width, height, split_size)
         db.session.add(parentimg)
         db.session.commit()
-        return jsonify({'exists': False, 'parent_image_id': parentimg.id}), 200
+        parentimg_id = parentimg.id
+        
+        # add child image to db
+        for child_img in child_imgs:
+            """
+            {'name': 'Screenshot 2024-04-10 at 4.09.19\u202fPM_h0_w0', 'location': [0, 0], 'paddings': [204, 236, 480, 480]}
+            """
+            h, w = child_img['location']
+            x1, y1, x2, y2 = child_img['paddings']
+            img = Image(
+                imagename=re.sub(r'\s+', '_', child_img["name"]),
+                parentimage_id=parentimg_id,
+                loaction_h=h, location_w=w,
+                padding_xmin=x1, padding_ymin=y1,
+                padding_xmax=x2, padding_ymax=y2                
+            )
+            db.session.add(img)
+        db.session.commit()
+        return jsonify({'success': True}), 200
 
-@app.route('/add_image', methods=['POST'])
-def add_image():
+@app.route('/add_labels_db', methods=['POST'])
+def add_labels():
     data = request.json
-    images_info = data["images_info"]
-    parent_image_id = data["parent_image_id"]
-
-
-    return jsonify({'success': True}), 200
+    username = data["username"]
+    imagename = data["image_name"]
+    imagename = re.sub(r'\s+', '_', imagename)
+    yolo_labels = data["yolo_labels"]
+    set = data["class_set"]
+    label_file_path = os.path.join("Annotations", f"Server_AnnotationsSet{set}", "labels", f'{imagename}.txt')
+    user = User.query.filter_by(username=username).first()
+    user_id = user.id
+    image = Image.query.filter_by(imagename=imagename).first()
+    image_id = image.id
     
+    # check is this the first time this user submit the label of this image
+    # user_label_history_exist = LabelHistory.query.filter_by(image_id=image_id, user_id=user_id).first()
+    
+    # if user_label_history_exist:
+        # not first time -> update previous label
+    #    pass
+    # else:
+    # first time label -> add to label_history
+    label_history = LabelHistory(image_id, user_id, datetime.now(), label_file_path)
+    db.session.add(label_history)
+    db.session.commit()
+    label_history_id = label_history.id
+    
+    print(label_history_id)
+    # add labels
+    for label in yolo_labels:
+        id, x, y, w, h, _ = label.values()
+        label = Labels(label_history_id, set, id, x, y, w, h)
+        db.session.add(label)
+        
+    image.is_labeled = True
+    db.session.commit()
+    
+    return jsonify({'success': True}), 200
+   
+
+@app.route('/download_annotations', methods=['GET'])
+def download_annotations():
+    data = request.json
+    completed_file_name = data['filenames']
+    label_file_path = "../annotations/label.txt"
+    image_file_path = "../annotations/image.png"
+
+    # 创建zip文件
+    zip_filename = 'annotations.zip'
+    with zipfile.ZipFile(zip_filename, 'w') as zipf:
+        # 添加标签文件到 "label" 文件夹中
+        zipf.write(label_file_path, arcname=os.path.join("label", os.path.basename(label_file_path)))
+        # 添加图像文件到 "image" 文件夹中
+        zipf.write(image_file_path, arcname=os.path.join("image", os.path.basename(image_file_path)))
+
+    # 提供 zip 文件给前端下载
+    return send_file(zip_filename, as_attachment=True)
+
 if __name__ == '__main__':
     create_tables()
     if not os.path.exists("./Annotations"): 
