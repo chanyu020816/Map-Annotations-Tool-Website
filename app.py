@@ -18,8 +18,8 @@ from datetime import datetime
 
 
 app = Flask(__name__)
-# app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@db/symboldetection'
-app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@localhost:3306/symboldetection'
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@db/symboldetection'
+# app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@localhost:3306/symboldetection'
 db = SQLAlchemy(app)
 
 class1 = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶畑"]
