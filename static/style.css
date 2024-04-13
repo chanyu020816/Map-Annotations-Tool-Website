@@ -47,7 +47,7 @@ body {
     color: white;
     margin: 30px;
     position: absolute;  
-    top: -10px;  
+    top: 20px;  
     left: 1100px;  
     vertical-align: top;  
     border: none;
@@ -63,7 +63,6 @@ body {
     background-color: #008CBA;  
     color: #ffffff;  
 }
-
 #upload-button {
     background-color: #392fff;
     color: white;
@@ -127,8 +126,21 @@ body {
     padding: 15px 50px;
     margin: 30px;
     position: absolute;  
-    top: 320px;  
+    top: 185px;  
     left: 890px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#complete-counter {
+    padding: 15px 50px;
+    margin: 30px;
+    position: absolute;  
+    top: 185px;  
+    left: 1070px;  
     vertical-align: top;  
     border: none;
     border-radius: 5px;
@@ -144,8 +156,8 @@ body {
     text-align: center;
     margin: 30px;
     position: absolute;  
-    top: 230px;  
-    left: 925px;  
+    top: 185px;  
+    left: 1510px;  
     vertical-align: top;  
     border: none;
     border-radius: 5px;
@@ -162,8 +174,8 @@ body {
     text-align: center;
     margin: 30px;
     position: absolute;  
-    top: 160px;  
-    left: 925px;  
+    top: 90px;  
+    left: 1100px;  
     vertical-align: top;  
     border: none;
     border-radius: 5px;
@@ -487,7 +499,7 @@ a[href^="#"]::after {
     position: absolute;
     display: inline-block;
     vertical-align: top;
-    top: 365px;  
+    top: 230px;  
     left: 785px;  
 }
 
@@ -508,8 +520,8 @@ label[for="label-size"] {
     list-style-type: none;  
     padding: 0;
     position: absolute;  
-    left: 780px;  
-    top: 400px;  
+    left: 785px;  
+    top: 270px;  
    
 }
 
@@ -570,9 +582,9 @@ label[for="label-size"] {
 
 #format-select {
     position: absolute;
-    top: 230px;
+    top: 185px;
     margin: 30px;
-    left: 750px;  
+    left: 1330px;  
     font-size: 16px;
     background-color: #ff902f;
     color: white;
@@ -592,7 +604,7 @@ label[for="label-size"] {
     padding: 15px 50px;
     margin: 30px;
     position: absolute;  
-    top: 280px;  
+    top: 140px;  
     left: 705px;  
     vertical-align: top;  
     border: none;

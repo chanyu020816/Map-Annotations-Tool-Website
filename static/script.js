@@ -245,7 +245,6 @@ function splitImage(image, file, size) {
         split_size: size
     }
     const childImages = [];
-    console.log(file.name)
     canvas.height = newH;
     canvas.width = newW;
     ctx.fillStyle = '#000000';
@@ -461,6 +460,7 @@ function showImage(index, change = true) {
     });
     document.getElementById('image_display').addEventListener('click', imageClickHandler);
     updateImageCounter(currentImageIndex)
+    updatCompleteCounter()
 }
 
 function updateAnnotations(index) {
@@ -551,8 +551,8 @@ function updateImageMenu(imageNames) {
             deleteImage(index);
         });
 
-        deleteButtonContainer.appendChild(deleteButton); // 将 delete button 放入容器内
-        menuItem.appendChild(deleteButtonContainer); // 将容器放入菜单项内
+        // deleteButtonContainer.appendChild(deleteButton); // 将 delete button 放入容器内
+        // menuItem.appendChild(deleteButtonContainer); // 将容器放入菜单项内
 
         // 添加勾选框
         const checkbox = document.createElement('span');
@@ -578,6 +578,7 @@ function updateImageMenu(imageNames) {
 
 // 标记图像为已完成
 function markImageAsCompleted(index) {
+    updatCompleteCounter()
     const menuItem = document.getElementById(`menu-item-${index}`);
     if (menuItem) {
         menuItem.classList.add('completed'); // 添加已完成样式
@@ -620,7 +621,6 @@ function deleteImage(index) {
         } else if (currentImageIndex >= index) {
             currentImageIndex -= 1;
         }
-        
         showImage(currentImageIndex);
     } else {
         const confirmDelete = confirm('該圖像尚未完成標註 確定要進行刪除嗎？');
@@ -649,7 +649,6 @@ function deleteImage(index) {
             } else if (currentImageIndex >= index) {
                 currentImageIndex -= 1;
             }
-
             showImage(currentImageIndex);
         }
     }
@@ -718,6 +717,10 @@ function imageClickHandler(event) {
 
 function updateImageCounter(index) {
     document.getElementById('image-counter').textContent = '圖片數量 ' + (index + 1) + ' / ' + images.length;
+}
+
+function updatCompleteCounter() {
+    document.getElementById('complete-counter').textContent = '完成標註數量 ' + completedImageName.length + ' / ' + images.length;
 }
 
 // reset all labels
