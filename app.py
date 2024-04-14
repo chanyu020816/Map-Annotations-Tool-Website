@@ -487,10 +487,8 @@ def download_annotations():
     class_set = request.args.get('class_set')
     completed_file_names = request.args.get('filenames').split(',')
     format_type = request.args.get('format_type')
-    print(format_type)
     
     zip_filename = 'annotations.zip'
-    print(completed_file_names)
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
         for file in completed_file_names:
             filename = re.sub(r'\s+', '_', file)

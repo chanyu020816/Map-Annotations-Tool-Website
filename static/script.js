@@ -108,7 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('complete-button').addEventListener('click', async function () {
-        completedImageName.push(imagesName[currentImageIndex])
+        if (!completedImageName.includes(imagesName[currentImageIndex])) {
+            completedImageName.push(imagesName[currentImageIndex]);
+        }
         menuItemsCompleted.push(currentImageIndex)
         markImageAsCompleted(currentImageIndex); 
         complete_label_image();
