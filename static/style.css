@@ -1,0 +1,771 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: left;
+    padding: 35px;
+    background-color: #f4f4f4;
+
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+    overflow: auto;
+}
+
+.image-container {
+    width: 720px;
+    height: 720px;
+    background-color: #ccc;  
+    position: relative;
+    overflow: hidden;  
+}
+#image-display {
+    display: none;  
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 720px; 
+    height: 720px;
+    object-fit: contain;  
+}
+
+#image_display {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 720px; 
+    height: 720px;
+    object-fit: contain;  
+}
+
+
+#custom-file-button {
+    background-color: #008CBA;
+}
+
+#logout-button {
+    background-color: #ff2f2f;
+    color: white;
+    margin: 30px;
+    position: absolute;  
+    top: 20px;  
+    left: 1100px;  
+    vertical-align: top;  
+    border: none;
+    width: 80px;
+    height: 25px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#logout-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+#upload-button {
+    background-color: #392fff;
+    color: white;
+    margin: 30px;
+    position: absolute;  
+    top: 20px;  
+    left: 750px;  
+    vertical-align: top;  
+    border: none;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#upload-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+#reset-button {
+    background-color: #392fff;
+    color: white;
+    margin: 30px;
+    position: absolute;  
+    top: 20px;  
+    left: 925px;  
+    vertical-align: top;  
+    border: none;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#reset-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+#download-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+#prev-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+#next-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+#complete-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+
+#image-counter {
+    padding: 15px 50px;
+    margin: 30px;
+    position: absolute;  
+    top: 185px;  
+    left: 890px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#complete-counter {
+    padding: 15px 50px;
+    margin: 30px;
+    position: absolute;  
+    top: 185px;  
+    left: 1070px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#download-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute;  
+    top: 185px;  
+    left: 1510px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#complete-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute;  
+    top: 90px;  
+    left: 1100px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#prev-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute;  
+    top: 90px;  
+    left: 750px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#next-button {
+    background-color: #392fff;
+    color: white;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    margin: 30px;
+    position: absolute;  
+    top: 90px;  
+    left:  925px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#custom-file-button:hover, #prev:hover, #next:hover {
+    background-color: #45a049;
+}
+
+nav {
+    display: block;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.pagination {
+    
+    vertical-align: top;
+    padding-left: 0px;
+    margin: 15px 0px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.pagination > li {
+    display: inline;
+}
+
+
+a {
+    background-color: transparent;
+}
+
+.ptypeBtn {
+    width: 170px;  
+    margin: 0px 10px;
+    border-radius: 5px;
+    text-align: center;
+      
+}
+
+ 
+.pagination:nth-child(1) {
+    width: 100%;
+}
+.pagination > li > a {
+    position: relative;
+    float: left;
+    padding: 0px 0px;
+    margin-left: -1px;
+    line-height: 1.42857;
+    color: rgb(51, 122, 183);
+    text-decoration: none;
+    background-color: rgb(255, 255, 255);
+}
+
+a:active {
+    outline: 0px;
+}
+
+a:focus {
+    color: rgb(35, 82, 124);
+    text-decoration: underline;
+}
+
+.pagination > li > a:focus {
+    z-index: 3;
+    color: rgb(35, 82, 124);
+    background-color: rgb(238, 238, 238);
+    border-color: rgb(221, 221, 221);
+}
+
+a:visited {
+    text-decoration: underline;
+}
+
+a[href]::after {
+    content: " (" attr(href) ")";
+}
+
+a[href^="#"]::after {
+    content: "";
+}
+
+.pagination > .active[data-ptype="1"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 0, 0, 0.7); 
+    border-color: rgb(255, 0, 0); 
+}
+.pagination > .active[data-ptype="2"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 0, 255, 0.7);  
+    border-color: rgb(0, 0, 255); 
+}
+.pagination > .active[data-ptype="3"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 0, 0.7);  
+    border-color: rgb(0, 128, 0); 
+}
+.pagination > .active[data-ptype="4"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 0, 128, 0.7);  
+    border-color: rgb(128, 0, 128); 
+}
+
+.pagination > .active[data-ptype="5"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 165, 0, 0.7);  
+    border-color: rgb(255, 165, 0); 
+}
+
+.pagination > .active[data-ptype="6"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 192, 203, 0.7);  
+    border-color: rgb(255, 192, 203); 
+}
+
+.pagination > .active[data-ptype="7"] > a  {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 255, 0, 0.7);  
+    border-color: rgb(255, 255, 0); 
+}
+
+.pagination > .active[data-ptype="8"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 255, 255, 0.7);  
+    border-color: rgb(0, 255, 255); 
+}
+
+.pagination > .active[data-ptype="9"] > a  {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 0, 255, 0.7);  
+    border-color: rgb(255, 0, 255); 
+}
+
+.pagination > .active[data-ptype="10"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 128, 0.7);  
+    border-color: rgb(0, 128, 128); 
+}
+
+.pagination > .active[data-ptype="11"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(165, 42, 42, 0.7);  
+    border-color: rgb(165, 42, 42); 
+}
+
+.pagination > .active[data-ptype="12"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);  
+    border-color: rgb(128, 128, 0); 
+}
+
+.pagination > .active[data-ptype="1"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 0, 0, 0.7);  
+    border-color: rgb(255, 0, 0); 
+}
+.pagination > .active[data-ptype="2"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 0, 255, 0.7);  
+    border-color: rgb(0, 0, 255); 
+}
+
+.pagination > .active[data-ptype="3"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 0, 0.7);  
+    border-color: rgb(0, 128, 0); 
+}
+.pagination > .active[data-ptype="4"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 0, 128, 0.7);  
+    border-color: rgb(128, 0, 128); 
+}
+
+.pagination > .active[data-ptype="5"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 165, 0, 0.7);  
+    border-color: rgb(255, 165, 0); 
+}
+
+.pagination > .active[data-ptype="6"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 192, 203, 0.7);  
+    border-color: rgb(255, 192, 203); 
+}
+
+.pagination > .active[data-ptype="7"] > a:focus {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 255, 0, 0.7);  
+    border-color: rgb(255, 255, 0); 
+}
+
+.pagination > .active[data-ptype="8"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 255, 255, 0.7);  
+    border-color: rgb(0, 255, 255); 
+}
+
+.pagination > .active[data-ptype="9"] > a:focus {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 0, 255, 0.7);  
+    border-color: rgb(255, 0, 255); 
+}
+
+.pagination > .active[data-ptype="10"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 128, 0.7);  
+    border-color: rgb(0, 128, 128); 
+}
+
+.pagination > .active[data-ptype="11"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(165, 42, 42, 0.7);  
+    border-color: rgb(165, 42, 42); 
+}
+
+.pagination > .active[data-ptype="12"] > a:focus {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);  
+    border-color: rgb(128, 128, 0); 
+}
+
+#label-size-container {
+    position: absolute;
+    display: inline-block;
+    vertical-align: top;
+    top: 230px;  
+    left: 785px;  
+}
+
+#label-size {
+    width: 80px;  
+    height: 30px;  
+    font-size: 18px;  
+    position: absolute;
+    top: -9px;
+    left: 85px;
+}
+label[for="label-size"] {
+    font-size: 18px;  
+}
+
+
+#image-menu {
+    list-style-type: none;  
+    padding: 0;
+    position: absolute;  
+    left: 785px;  
+    top: 270px;  
+   
+}
+
+#image-menu li.completed > a::before {
+    content: '\2713';  
+    margin-right: 5px;  
+    color: green;  
+}
+
+#image-menu li::before {
+    content: none;  
+    display: none;  
+}
+
+
+.delete-button {
+    background-color: #FF3A3A;
+    color: white;
+    padding: 2px 5px;
+    margin: 5px;
+    margin-left: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#image-menu li {
+    display: table-row;  
+}
+
+#image-menu li > * {
+    display: table-cell;  
+    padding: 5px;  
+    border-bottom: 1px solid #ccc;  
+    vertical-align: middle;  
+    
+}
+
+#image-menu li > a {
+    text-decoration: underline;  
+    color: black;  
+    
+}
+
+.selection-rect {
+    position: absolute;
+    border: 2px dashed #00BFFF;   
+    background-color: rgba(0, 191, 255, 0.2);   
+    z-index: 10;   
+}
+
+.detection-box, .overlay-div {
+    position: absolute;
+    border: 2px solid red;
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
+#format-select {
+    position: absolute;
+    top: 185px;
+    margin: 30px;
+    left: 1330px;  
+    font-size: 16px;
+    background-color: #ff902f;
+    color: white;
+    text-align: center;
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    width: 163px;
+    height: 52px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#format-select:hover {
+    background-color: #efc483;  
+    color: #ffffff;  
+}
+#download-status {
+    padding: 15px 50px;
+    margin: 30px;
+    position: absolute;  
+    top: 140px;  
+    left: 705px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+#firstSetBtn {
+    background-color: #392fff;
+    color: white;
+    position: absolute;
+    top: 765px;
+    font: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    height: 40px;
+    width: 150px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+}
+#secondSetBtn {
+    background-color: #392fff;
+    color: white;
+    position: absolute;
+    top: 765px;
+    left: 200px;
+    font: 16px;
+    transition: background-color 0.3s, color 0.3s;
+    height: 40px;
+    width: 150px;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+}
+#pagination1_1 {
+    position: absolute;
+    top: 800px
+
+}
+
+#pagination1_2 {
+    position: absolute;
+    top: 950px
+
+}
+#pagination2_1 {
+    position: absolute;
+    top: 800px
+
+}
+
+#pagination2_2 {
+    position: absolute;
+    top: 950px
+
+}
+
+#pagination2_3 {
+    position: absolute;
+    top: 1100px;
+}
+
+#firstSetBtn:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+
+#secondSetBtn:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+
+.content,
+nav {
+    display: none;
+}
+
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+.background .shape{
+    height: 200px;
+    width: 200px;
+    position: absolute;
+    border-radius: 50%;
+}
+
+form{
+    height: 430px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 0px 35px;
+}
+
+form h3{
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: center;
+}
+#username_label{
+    display: block;
+    margin-top: 0px;
+    font-size: 20px;
+    font-weight: 500;
+}
+#password_label{
+    display: block;
+    margin-top: 0px;
+    font-size: 20px;
+    font-weight: 500;
+}
+input{
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+::placeholder{
+    color: #e5e5e5;
+}
+
+#submit_button{
+    margin-top: 25px;
+    width: 100%;
+    background-color: #392fff;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+#login-status{
+    color: red;
+    font-size: 18px;
+}
