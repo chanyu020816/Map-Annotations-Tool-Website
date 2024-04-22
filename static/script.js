@@ -14,6 +14,7 @@ let ptype = 1;
 let classSet = 1;
 let annotations = [];
 let format_type = 'yolo'
+let mode ='annotate'
 const split_size = 480
 const classColors = {
     0: 'red',
@@ -37,7 +38,14 @@ function submitForm(event) {
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-
+    const login_set = document.getElementById('login-set');
+    login_set.addEventListener('change', function() {
+        classSet = login_set.value;
+    });
+    const login_mode = document.getElementById('login-mode');
+    login_mode.addEventListener('change', function() {
+        classSet = login_mode.value;
+    });
     fetch('/website/validate_password', {
         method: 'POST',
         headers: {
@@ -55,6 +63,9 @@ function submitForm(event) {
             document.querySelector(".content").style.display = "block";
             document.querySelector("nav").style.display = "block";
             localStorage.setItem('username', username);
+            localStorage.setItem('login_set', classSet)
+            localStorage.setItem('login_mode', mode)
+            displaySet(classSet)
         } else {
             const loginStatus = document.getElementById('login-status')
             loginStatus.textContent = "Password Incorrect"
@@ -64,14 +75,57 @@ function submitForm(event) {
         console.error('Error:', error);
     });
 }
-
-window.onload = function() {
-    const username = localStorage.getItem('username');
-    if (username) {
-        
+function displaySet(set) {
+    
+    console.log(classSet)
+    if (classSet === 1) {
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
         document.querySelector("nav").style.display = "block";
+        classSet = 1;
+        pagination1_1.style.display = 'block';
+        pagination1_2.style.display = 'block';
+        pagination2_1.style.display = 'none';
+        pagination2_2.style.display = 'none';
+        pagination2_3.style.display = 'none';
+        
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('ptype', 'active');
+        });
+        const class1ptype = document.getElementById('class1ptype');
+        class1ptype.classList.add('ptype', 'active');
+        ptype = 1;
+        console.log("Set1")
+    } else {
+        document.getElementById("form_container").style.display = "none";
+        document.querySelector(".content").style.display = "block";
+        document.querySelector("nav").style.display = "block";
+        classSet = 2;
+        pagination1_1.style.display = 'none';
+        pagination1_2.style.display = 'none';
+        pagination2_1.style.display = 'block';
+        pagination2_2.style.display = 'block';
+        pagination2_3.style.display = 'block';
+
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('ptype', 'active');
+        });
+        const class2ptype = document.getElementById('class2ptype');
+        class2ptype.classList.add('ptype', 'active');
+        ptype = 1;
+    }
+}
+window.onload = function() {
+    const username = localStorage.getItem('username');
+    const login_set = localStorage.getItem('login_set');
+    const login_mode = localStorage.getItem('login_mode');
+    if (username) {
+        document.getElementById("form_container").style.display = "none";
+        document.querySelector(".content").style.display = "block";
+        document.querySelector("nav").style.display = "block";
+        displaySet(login_set)
     }
 }
 
@@ -126,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     
+    /*
     const firstSetBtn = document.getElementById('firstSetBtn');
     const secondSetBtn = document.getElementById('secondSetBtn');
     const pagination1_1 = document.getElementById('pagination1_1');
@@ -173,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
         class2ptype.classList.add('ptype', 'active');
         ptype = 1;
     });
-
+    */ 
     const logoutBtn = document.getElementById('logout-button');
     logoutBtn.addEventListener('click', function() {
         localStorage.removeItem('username');

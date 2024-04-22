@@ -24,6 +24,15 @@
                     <label for="password" id="password_label">Password</label>
                     <input type="password" placeholder="Password" id="password">
                     <br/>
+                    <select id="login-set">
+                        <option value=1>第一套圖徵</option>
+                        <option value=2>第二套圖徵</option> 
+                    </select>
+                    <select id="login-mode">
+                        <option value="annotate">標註</option>
+                        <option value="modify">修改</option> 
+                    </select>
+                    <br/>
                     <div id="login-status"></div>
                     <br/>
                     <button type="submit" class="btn" id="submit_button">Log in</button>
@@ -60,9 +69,9 @@
         <nav aria-label="Page navigation">
 
             <!-- 第一个按钮，点击后显示上面的内容 -->
-            <button id="firstSetBtn" style="border: 3px solid red">第一套圖徵</button>
+            <!-- <button id="firstSetBtn" style="border: 3px solid red">第一套圖徵</button> -->
             <!-- 第二个按钮，点击后显示另一套内容 -->
-            <button id="secondSetBtn">第二套圖徵</button>
+            <!-- <button id="secondSetBtn">第二套圖徵</button> -->
             <ul class="pagination" id="pagination1_1">
                 <li class="ptype active" data-ptype="1" id="class1ptype">
                     <a class="ptypeBtn" data-ptype="1" href="#" style="display: inline-block;">
