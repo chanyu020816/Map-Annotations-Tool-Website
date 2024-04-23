@@ -14,6 +14,7 @@ let ptype = 1;
 let classSet = 1;
 let annotations = [];
 let format_type = 'yolo'
+let mode ='annotate'
 const split_size = 480
 const classColors = {
     0: 'red',
@@ -37,8 +38,15 @@ function submitForm(event) {
 
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
-
-    fetch('/validate_password', {
+    const login_set = document.getElementById('login-set');
+    login_set.addEventListener('change', function() {
+        classSet = login_set.value;
+    });
+    const login_mode = document.getElementById('login-mode');
+    login_mode.addEventListener('change', function() {
+        classSet = login_mode.value;
+    });
+    fetch('/website/validate_password', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -55,6 +63,9 @@ function submitForm(event) {
             document.querySelector(".content").style.display = "block";
             document.querySelector("nav").style.display = "block";
             localStorage.setItem('username', username);
+            localStorage.setItem('login_set', classSet)
+            localStorage.setItem('login_mode', mode)
+            displaySet(classSet)
         } else {
             const loginStatus = document.getElementById('login-status')
             loginStatus.textContent = "Password Incorrect"
@@ -64,14 +75,57 @@ function submitForm(event) {
         console.error('Error:', error);
     });
 }
-
-window.onload = function() {
-    const username = localStorage.getItem('username');
-    if (username) {
-        
+function displaySet(set) {
+    
+    console.log(classSet)
+    if (classSet === 1) {
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
         document.querySelector("nav").style.display = "block";
+        classSet = 1;
+        pagination1_1.style.display = 'block';
+        pagination1_2.style.display = 'block';
+        pagination2_1.style.display = 'none';
+        pagination2_2.style.display = 'none';
+        pagination2_3.style.display = 'none';
+        
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('ptype', 'active');
+        });
+        const class1ptype = document.getElementById('class1ptype');
+        class1ptype.classList.add('ptype', 'active');
+        ptype = 1;
+        console.log("Set1")
+    } else {
+        document.getElementById("form_container").style.display = "none";
+        document.querySelector(".content").style.display = "block";
+        document.querySelector("nav").style.display = "block";
+        classSet = 2;
+        pagination1_1.style.display = 'none';
+        pagination1_2.style.display = 'none';
+        pagination2_1.style.display = 'block';
+        pagination2_2.style.display = 'block';
+        pagination2_3.style.display = 'block';
+
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('ptype', 'active');
+        });
+        const class2ptype = document.getElementById('class2ptype');
+        class2ptype.classList.add('ptype', 'active');
+        ptype = 1;
+    }
+}
+window.onload = function() {
+    const username = localStorage.getItem('username');
+    const login_set = localStorage.getItem('login_set');
+    const login_mode = localStorage.getItem('login_mode');
+    if (username) {
+        document.getElementById("form_container").style.display = "none";
+        document.querySelector(".content").style.display = "block";
+        document.querySelector("nav").style.display = "block";
+        displaySet(login_set)
     }
 }
 
@@ -109,8 +163,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('complete-button').addEventListener('click', async function () {
         if (!completedImageName.includes(imagesName[currentImageIndex])) {
-            completedImageName.push(imagesName[currentImageIndex]);
-        }
+	    completedImageName.push(imagesName[currentImageIndex])
+	}
         menuItemsCompleted.push(currentImageIndex)
         markImageAsCompleted(currentImageIndex); 
         complete_label_image();
@@ -126,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     
+    /*
     const firstSetBtn = document.getElementById('firstSetBtn');
     const secondSetBtn = document.getElementById('secondSetBtn');
     const pagination1_1 = document.getElementById('pagination1_1');
@@ -173,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
         class2ptype.classList.add('ptype', 'active');
         ptype = 1;
     });
-
+    */ 
     const logoutBtn = document.getElementById('logout-button');
     logoutBtn.addEventListener('click', function() {
         localStorage.removeItem('username');
@@ -183,6 +238,23 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector(".content").style.display = "none";
         document.querySelector("nav").style.display = "none";
         document.getElementById("image-menu").style.display = "none";
+        images = [];
+        imagesName = [];
+        currentImageIndex = 0;
+        menuItemsCompleted = [];
+        completedImageName = [];
+        labels = [];
+        prev_index = -1;
+        detections = []; 
+        paddings = [];
+        document.getElementById('image-counter').textContent = '圖片數量 0 / 0';
+        document.getElementById('complete-counter').textContent = '完成標註數量 0 / 0';
+        updateImageMenu(imagesName);
+        const container = document.getElementById('image-container');
+        const imageDisplay = document.getElementById('image_display');
+        if (imageDisplay) {
+            container.removeChild(imageDisplay);
+        }
     })
 });
 
@@ -192,7 +264,7 @@ function handleFileSelect(event) {
     let files = Array.from(event.target.files);
     if (!files || files.length === 0) return;
 
-    if (images.length >= 100) {
+    if (images.length >= 500) {
         alert("已達到圖片上限 無法繼續上傳，請先完成目前圖片標註！");
         return;
     }
@@ -523,59 +595,61 @@ function updateImageMenu(imageNames) {
     menu.innerHTML = ''; // 清空菜单内容
 
     // 为每张图像创建菜单项
-    imageNames.forEach((name, index) => {
-        const menuItem = document.createElement('li');
-        menuItem.id = `menu-item-${index}`;
-
-        // 添加超链接元素
-        const link = document.createElement('a');
-        link.textContent = name; // 使用图像名称作为超链接文本内容
-        link.href = '#'; // 链接地址设为 #
-        link.addEventListener('click', (event) => {
-            event.preventDefault(); // 阻止默认点击事件
-            if (images.length === 0) {
-                showBlankImage();
-            } else {
-                currentImageIndex = index;
-                showImage(index);
-            }
-        });
-        menuItem.appendChild(link);
-
-        const deleteButtonContainer = document.createElement('div'); // 创建一个新的容器元素
-        deleteButtonContainer.style.display = 'inline-block'; // 设置容器为内联块级元素
-
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = '刪除圖片';
-        deleteButton.className = 'delete-button';
-
-        deleteButton.addEventListener('click', () => {
-            deleteImage(index);
-        });
-
-        // deleteButtonContainer.appendChild(deleteButton); // 将 delete button 放入容器内
-        // menuItem.appendChild(deleteButtonContainer); // 将容器放入菜单项内
-
-        // 添加勾选框
-        const checkbox = document.createElement('span');
-        checkbox.className = 'checkbox';
-        menuItem.appendChild(checkbox);
-        // 检查图像是否已完成，如果是，则添加 completed 类
-        if (menuItemsCompleted.includes(index)) {
-            menuItem.classList.add('completed');
-        }
-        menu.appendChild(menuItem);
-        
-    });
-
-    // 标记当前图像的菜单项
-    const currentMenuItem = document.getElementById(`menu-item-${currentImageIndex}`);
-    if (currentMenuItem) {
-        // 将当前图像的菜单项设置为蓝色字体并添加下划线
-        currentMenuItem.querySelector('a').style.color = 'blue';
-        currentMenuItem.querySelector('a').style.textDecoration = 'underline';
-    }
+    if (imageNames.length !== 0) {
+        imageNames.forEach((name, index) => {
+            const menuItem = document.createElement('li');
+            menuItem.id = `menu-item-${index}`;
     
+            // 添加超链接元素
+            const link = document.createElement('a');
+            link.textContent = name; // 使用图像名称作为超链接文本内容
+            link.href = '#'; // 链接地址设为 #
+            link.addEventListener('click', (event) => {
+                event.preventDefault(); // 阻止默认点击事件
+                if (images.length === 0) {
+                    showBlankImage();
+                } else {
+                    currentImageIndex = index;
+                    showImage(index);
+                }
+            });
+            menuItem.appendChild(link);
+    
+            const downloadButtonContainer = document.createElement('div'); // 创建一个新的容器元素
+            downloadButtonContainer.style.display = 'inline-block'; // 设置容器为内联块级元素
+    
+            // download-button
+            const downloadButton = document.createElement('button');
+            downloadButton.textContent = '下載圖片';
+            downloadButton.className = 'download-image-button';
+    
+            downloadButton.addEventListener('click', async function () {
+                downloadImage(index)
+            });
+    
+            downloadButtonContainer.appendChild(downloadButton); // 将 download button 放入容器内
+            menuItem.appendChild(downloadButtonContainer); // 将容器放入菜单项内
+    
+            // 添加勾选框
+            const checkbox = document.createElement('span');
+            checkbox.className = 'checkbox';
+            menuItem.appendChild(checkbox);
+            // 检查图像是否已完成，如果是，则添加 completed 类
+            if (menuItemsCompleted.includes(index)) {
+                menuItem.classList.add('completed');
+            }
+            menu.appendChild(menuItem);
+            
+        });
+    
+        // 标记当前图像的菜单项
+        const currentMenuItem = document.getElementById(`menu-item-${currentImageIndex}`);
+        if (currentMenuItem) {
+            // 将当前图像的菜单项设置为蓝色字体并添加下划线
+            currentMenuItem.querySelector('a').style.color = 'blue';
+            currentMenuItem.querySelector('a').style.textDecoration = 'underline';
+        }
+    }        
 }
 
 // 标记图像为已完成
@@ -785,7 +859,7 @@ async function complete_label_image() {
 
         try {
             downloadStatus.textContent = `正在儲存 ${imageName} ...`;
-            await fetch('/save_image', {
+            await fetch('website/save_image', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -798,7 +872,7 @@ async function complete_label_image() {
                     username: localStorage.getItem('username')
                 })
             });
-            await fetch('/save_annotations', {
+            await fetch('website/save_annotations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -812,7 +886,7 @@ async function complete_label_image() {
                     username: localStorage.getItem('username')
                 })
             });
-            await fetch('/add_labels_db', {
+            await fetch('website/add_labels_db', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -844,7 +918,7 @@ function add_parent_child_images(parentImage, childImages) {
         child_images: childImages
     }
 
-    fetch('/add_img_db', {
+    fetch('website/add_img_db', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -866,7 +940,7 @@ function download_labeled_images() {
     const downloadStatus = document.getElementById('download-status');
     if (completedImageName.length > 0) {
         const queryString = `?class_set=${encodeURIComponent(classSet)}&filenames=${encodeURIComponent(JSON.stringify(completedImageName))}&format_type=${encodeURIComponent(format_type)}`;
-        fetch(`/download_annotations${queryString}`, {
+        fetch(`website/download_annotations${queryString}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -940,7 +1014,7 @@ function imageMouseOutHandler() {
 
 
 
-/*
+
 window.addEventListener('beforeunload', function(event) {
     // 取消事件的默认动作，以便显示确认框
     event.preventDefault();
@@ -952,7 +1026,7 @@ window.addEventListener('beforeunload', function(event) {
     event.returnValue = confirmationMessage; // 兼容旧版浏览器
     return confirmationMessage;
 });
-*/
+
 
 async function openFolderDialog() {
     const options = {

@@ -537,8 +537,8 @@ label[for="label-size"] {
 }
 
 
-.delete-button {
-    background-color: #FF3A3A;
+.download-button {
+    background-color: #443aff;
     color: white;
     padding: 2px 5px;
     margin: 5px;
@@ -699,7 +699,7 @@ nav {
 }
 
 form{
-    height: 430px;
+    height: 450px;
     width: 400px;
     background-color: rgba(255,255,255,0.13);
     position: absolute;
@@ -721,11 +721,23 @@ form h3{
 }
 #username_label{
     display: block;
-    margin-top: 0px;
+    margin-top: -20px;
     font-size: 20px;
     font-weight: 500;
 }
 #password_label{
+    display: block;
+    margin-top: 0px;
+    font-size: 20px;
+    font-weight: 500;
+}
+#set_label{
+    display: block;
+    margin-top: 0px;
+    font-size: 20px;
+    font-weight: 500;
+}
+#mode_label{
     display: block;
     margin-top: 0px;
     font-size: 20px;
@@ -737,8 +749,8 @@ input{
     width: 100%;
     background-color: rgba(255,255,255,0.07);
     border-radius: 3px;
-    padding: 0 10px;
-    margin-top: 8px;
+    padding: 0 5px;
+    margin-top: 5px;
     font-size: 14px;
     font-weight: 300;
 }
@@ -746,9 +758,46 @@ input{
     color: #e5e5e5;
 }
 
+#login-set{
+    top: 280px;
+    width: 40%;
+    position: absolute;
+    background-color: #ff902f;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+#login-mode{
+    top: 280px;
+    left: 203px;
+    width: 40%;
+    position: absolute;
+    background-color: #ff902f;
+    color: #ffffff;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+#login-set:hover {
+    background-color: #efc483;  
+    color: #ffffff;  
+}
+#login-mode:hover {
+    background-color: #efc483;  
+    color: #ffffff;  
+}
+
 #submit_button{
-    margin-top: 25px;
-    width: 100%;
+    top: 360px;
+    width: 83%;
+    position: absolute;
     background-color: #392fff;
     color: #ffffff;
     padding: 15px 0;
@@ -756,6 +805,10 @@ input{
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+}
+#submit_button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
 }
 .background{
     width: 430px;
