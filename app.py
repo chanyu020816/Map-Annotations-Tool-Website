@@ -18,8 +18,8 @@ from datetime import datetime
 
 
 app = Flask(__name__)
-# app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@db/symboldetection' # docker app.py with database
-app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@localhost:3306/symboldetection' # docker only database, app.py local
+#app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@db/symboldetection' # docker app.py with database
+app.config["SQLALCHEMY_DATABASE_URI"] = 'mysql+pymysql://admin01:symboldetection@localhost:8001/symboldetection' # docker only database, app.py local
 db = SQLAlchemy(app)
 
 class1 = ["田地", "草地", "荒地", "墓地", "樹林", "竹林", "旱地", "茶畑"]
@@ -225,7 +225,7 @@ def save_annotations():
         output_path = os.path.join(label_folder_path, f'{image_name}.txt')
         with open(output_path, 'w') as file:
             for label in yolo_labels:
-                id, x, y, w, h, _ = label.values()
+                id, x, y, w, h, _ = get_values(label)
                 file.write(f'{id} {x} {y} {w} {h} ' + '\n')
        
     elif format_type == 'pascal':
@@ -244,7 +244,7 @@ def save_annotations():
         
         writer = Writer(os.path.join(voc_folder_path, f'{image_name}.jpg'), image_size, image_size)
         for label in yolo_labels:
-            id, x, y, w, h, _ = label.values()
+            id, x, y, w, h, _ = get_values(label)
     
             x *= image_size
             y *= image_size
@@ -254,7 +254,7 @@ def save_annotations():
             y1 = y - h / 2
             x2 = x + w / 2
             y2 = y + h / 2
-            writer.addObject(classes[set][id], x1, y1, x2, y2)
+            writer.addObject(classes[set-1][id], x1, y1, x2, y2)
         writer.save(os.path.join(voc_folder_path, f'{image_name}.xml'))
         
     elif format_type == 'coco':
@@ -331,12 +331,12 @@ def save_annotations():
     with open(output_path, 'w') as file:
         
         for label in yolo_labels:
-            id, x, y, w, h, _ = label.values()
+            id, x, y, w, h, _ = get_values(label)
             file.write(f'{id} {x} {y} {w} {h} ' + '\n')
     
         writer = Writer(os.path.join("Annotations", f"Server_AnnotationsSet{set}", f'{image_name}.jpg'), image_size, image_size)
         for label in yolo_labels:
-            id, x, y, w, h, _ = label.values()
+            id, x, y, w, h, _ = get_values(label)
             x *= image_size
             y *= image_size
             w *= image_size
@@ -345,13 +345,21 @@ def save_annotations():
             y1 = y - h / 2
             x2 = x + w / 2
             y2 = y + h / 2
-            writer.addObject(classes[set][id], x1, y1, x2, y2)
+            writer.addObject(classes[set-1][id], x1, y1, x2, y2)
         writer.save(os.path.join(label_folder_path, f'{image_name}.xml'))
         
     return jsonify({'message': 'Success'})
 
+def get_values(label):
+    id = label["id"]
+    x = label["x"]
+    y = label["y"]
+    w = label["w"]
+    h = label["h"]
+    return [id, x, y, w, h, "tired"]
+
 def yolo2coco(yololabels, image_id, anno_id, img_size):
-    id, x, y, w, h, _ = yololabels.values()
+    id, x, y, w, h, _ = get_values(yololabels)
     
     x *= img_size
     y *= img_size
@@ -371,7 +379,7 @@ def yolo2coco(yololabels, image_id, anno_id, img_size):
     return new_annotation
 
 def yolo2tensorflow(yololabels, class_set, image_name, img_size):
-    id, x, y, w, h, _ = yololabels.values()
+    id, x, y, w, h, _ = get_values(yololabels)
     
     x *= img_size
     y *= img_size
@@ -391,6 +399,7 @@ def validate_password():
     password_input = data["password"]
     
     user = User.query.filter_by(username=username_input).first()
+    print(user.password)
     if user and user.password == password_input:
         return jsonify({'success': True}), 200
     else:
@@ -485,9 +494,8 @@ def add_labels():
 @app.route('/download_annotations', methods=['GET'])
 def download_annotations():
     class_set = request.args.get('class_set')
-    completed_file_names = request.args.get('filenames').split(',')
+    completed_file_names = request.args.get('filenames').split(';')
     format_type = request.args.get('format_type')
-    
     zip_filename = 'annotations.zip'
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
         for file in completed_file_names:
@@ -511,9 +519,71 @@ def download_annotations():
     # 提供 zip 文件给前端下载
     return send_file(zip_filename, as_attachment=True)
 
+@app.route('/download_image', methods=['GET'])
+def download_image():
+    filename = request.args.get('filenames')
+    image_name = re.sub(r'\s+', '_', filename)
+    image_name = image_name.replace("\"", "")
+    image_file_path = os.path.join("Annotations", f"Server_images", f'{image_name}.jpg')
+    return send_file(image_file_path, as_attachment=True)
+
+@app.route('/upload_yolo_labels', methods=['POST'])
+def upload_yolo_labels():
+    if 'file' not in request.files:
+        return 'no labels', 400
+
+    files = request.files.getlist('file')
+    if len(files) == 0:
+        return 'no labels', 400
+
+    labels = []
+    for file in files:
+        if file and file.filename.endswith('.txt'):
+            filename = file.filename
+            # existing_image = Image.query.filter_by(filename=filename).first()
+            existing_image = True
+            if existing_image:
+                label_data = parse_label_file(file)
+                if label_data:
+                    labels.append(label_data)
+            else:
+                return 'not found in database', 400
+    return jsonify(labels)
+
+def parse_label_file(file):
+    labels = []
+    annos = []
+    anno_id = 0
+    for line in file:
+        parts = line.strip().split()
+        if len(parts) == 5:
+            class_id, x_center, y_center, width, height = map(float, parts)
+            labels.append({
+                'id': class_id, 
+                'x': x_center, 
+                'y': y_center, 
+                'w': width, 
+                'h': height, 
+                'anno_id': anno_id
+            })
+            aug_w = width*720
+            aug_h = height*720
+            annos.append({
+                'id': class_id, 
+                'x': x_center*720 - aug_w/2, 
+                'y': y_center*720 - aug_h/2,
+                'w': aug_w, 
+                'h': aug_h, 
+                'anno_id': anno_id
+            })
+            anno_id += 1
+    
+    filename = file.filename[:-4]
+    return {'filename': filename, 'labels': labels, 'annos': annos, 'anno_id': anno_id} if labels else None
+
 if __name__ == '__main__':
     create_tables()
-    if not os.path.exists("./Annotations"): 
+    if not os.path.exists("./Annotations"):
         os.mkdir("./Annotations")
         
     app.run(host='0.0.0.0', port=8000, debug=True)
