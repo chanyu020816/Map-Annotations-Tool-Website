@@ -48,7 +48,7 @@ body {
     margin: 30px;
     position: absolute;  
     top: 20px;  
-    left: 1100px;  
+    left: 1300px;  
     vertical-align: top;  
     border: none;
     width: 80px;
@@ -84,13 +84,35 @@ body {
     background-color: #008CBA;  
     color: #ffffff;  
 }
-#reset-button {
+#upload-label-button {
     background-color: #392fff;
     color: white;
     margin: 30px;
     position: absolute;  
     top: 20px;  
     left: 925px;  
+    vertical-align: top;  
+    border: none;
+    width: 163px;
+    height: 52px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+}
+#upload-label-button:hover {
+    background-color: #008CBA;  
+    color: #ffffff;  
+}
+
+#reset-button {
+    background-color: #392fff;
+    color: white;
+    margin: 30px;
+    position: absolute;  
+    top: 20px;  
+    left: 1100px;
     vertical-align: top;  
     border: none;
     width: 163px;
@@ -537,7 +559,7 @@ label[for="label-size"] {
 }
 
 
-.download-button {
+.download-image-button {
     background-color: #443aff;
     color: white;
     padding: 2px 5px;
