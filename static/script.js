@@ -1,5 +1,3 @@
-
-
 let images = [];
 let imagesName = [];
 let currentImageIndex = 0;
@@ -45,7 +43,7 @@ function submitForm(event) {
     });
     const login_mode = document.getElementById('login-mode');
     login_mode.addEventListener('change', function() {
-        classSet = login_mode.value;
+        mode = login_mode.value;
     });
     fetch('/website/validate_password', {
         method: 'POST',
@@ -78,6 +76,7 @@ function submitForm(event) {
     });
 }
 function displaySet(set) {
+    set = parseInt(set)
     if (classSet === 1) {
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
@@ -96,7 +95,6 @@ function displaySet(set) {
         const class1ptype = document.getElementById('class1ptype');
         class1ptype.classList.add('ptype', 'active');
         ptype = 1;
-        console.log("Set1")
     } else {
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
@@ -120,8 +118,16 @@ function displaySet(set) {
 function displayMode(mode) {
     if (mode === 'annotate') {
         document.getElementById("upload-label-button").style.display = "none";
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('modify');
+        });
     } else if (mode === 'modify') {
         document.getElementById("upload-label-button").style.display = "block";
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.add('modify');
+        });
     } else {
         console.error()
     }
@@ -173,8 +179,16 @@ document.addEventListener('DOMContentLoaded', function() {
             liItems.forEach(item => {
                 if (item === this) {
                     item.classList.add('ptype', 'active');
+                    const aElement = item.querySelector('a'); // Get the <a> element inside the clicked list item
+                    if (aElement) {
+                        aElement.style.border = '3px solid red'; // Set the border color of <a> element
+                    }
                 } else {
                     item.classList.remove('ptype', 'active');
+                    const aElement = item.querySelector('a'); // Get the <a> element inside the list item
+                    if (aElement) {
+                        aElement.style.border = 'none';
+                    }
                 }
             });
         });
@@ -198,59 +212,10 @@ document.addEventListener('DOMContentLoaded', function() {
         format_type = formatSelect.value;
     });
 
-    
-    /*
-    const firstSetBtn = document.getElementById('firstSetBtn');
-    const secondSetBtn = document.getElementById('secondSetBtn');
-    const pagination1_1 = document.getElementById('pagination1_1');
-    const pagination1_2 = document.getElementById('pagination1_2');
-    const pagination2_1 = document.getElementById('pagination2_1');
-    const pagination2_2 = document.getElementById('pagination2_2');
-    const pagination2_3 = document.getElementById('pagination2_3');
-
-    
-    firstSetBtn.addEventListener('click', function() {
-        classSet = 1;
-        pagination1_1.style.display = 'block';
-        pagination1_2.style.display = 'block';
-        pagination2_1.style.display = 'none';
-        pagination2_2.style.display = 'none';
-        pagination2_3.style.display = 'none';
-        firstSetBtn.style = "border: 3px solid red;"
-        secondSetBtn.style.border = "none"
-        
-        const liItems = document.querySelectorAll('li');
-        liItems.forEach(li => {
-            li.classList.remove('ptype', 'active');
-        });
-        const class1ptype = document.getElementById('class1ptype');
-        class1ptype.classList.add('ptype', 'active');
-        ptype = 1;
-    });
-
-    
-    secondSetBtn.addEventListener('click', function() {
-        classSet = 2;
-        pagination1_1.style.display = 'none';
-        pagination1_2.style.display = 'none';
-        pagination2_1.style.display = 'block';
-        pagination2_2.style.display = 'block';
-        pagination2_3.style.display = 'block';
-        firstSetBtn.style.border = "none"
-        secondSetBtn.style = "border: 3px solid red;"
-
-        const liItems = document.querySelectorAll('li');
-        liItems.forEach(li => {
-            li.classList.remove('ptype', 'active');
-        });
-        const class2ptype = document.getElementById('class2ptype');
-        class2ptype.classList.add('ptype', 'active');
-        ptype = 1;
-    });
-    */ 
     const logoutBtn = document.getElementById('logout-button');
     logoutBtn.addEventListener('click', logout)
 });
+
 function logout() {
     localStorage.removeItem('username');
     localStorage.removeItem('login_set')
@@ -286,6 +251,10 @@ function logout() {
     }
     document.getElementById('login-set').selectedIndex = 0;
     document.getElementById('login-mode').selectedIndex = 0;
+    const liItems = document.querySelectorAll('li');
+    liItems.forEach(li => {
+        li.querySelector('a').style.border = 'none';
+    });
 }
 function handleFileSelect(event) {
     const downloadStatus = document.getElementById('download-status')
@@ -346,7 +315,7 @@ async function readLabel(file) {
     const formData = new FormData();
     formData.append('file', file);
     try {
-        const response = await fetch('/upload_yolo_labels', {
+        const response = await fetch('/website/upload_yolo_labels', {
             method: 'POST',
             body: formData
         });
@@ -358,6 +327,12 @@ async function readLabel(file) {
                 if (index !== -1) {
                     anno_ids[index] = labels_data[0].anno_id
                     annotations[index] = labels_data[0].annos 
+                    paddings[index] = [[
+                        labels_data[0].pad_xmin, 
+                        labels_data[0].pad_ymin, 
+                        labels_data[0].pad_xmax, 
+                        labels_data[0].pad_ymax
+                    ]]
                     labels[index] = labels_data[0].labels
                     // showImage(currentImageIndex, modify=true);
                 } else {
@@ -623,6 +598,7 @@ function showImage(index, change = true, modify=false) {
     document.getElementById('image_display').addEventListener('click', imageClickHandler);
     updateImageCounter(currentImageIndex)
     updatCompleteCounter()
+    updateLabelCounter(currentImageIndex)
 }
 
 function updateAnnotations(index) {
@@ -824,6 +800,10 @@ function showBlankImage() {
     container.innerHTML = '';
 }
 
+function updateLabelCounter(index) {
+    document.getElementById('label-counter').textContent = '標註框數量 ' + labels[index].length;
+}
+
 function imageClickHandler(event) {    
 
     const labelSizeInput = document.getElementById('label-size');
@@ -871,12 +851,13 @@ function imageClickHandler(event) {
         anno_id: anno_ids[currentImageIndex]
     });
     anno_ids[currentImageIndex] += 1
-
+    updateLabelCounter(currentImageIndex)
     div.addEventListener('click', function () {
         const removedAnnoId = this.dataset.anno_id;
         labels[currentImageIndex] = labels[currentImageIndex].filter(label => parseInt(label.anno_id) !== parseInt(removedAnnoId));
         annotations[currentImageIndex] = annotations[currentImageIndex].filter(anno => parseInt(anno.anno_id) !== parseInt(removedAnnoId));
-        this.remove();        
+        this.remove();    
+        updateLabelCounter(currentImageIndex)    
     });
 }
 
@@ -903,6 +884,7 @@ function labelreset() {
     while (divs.length > 0) {
         divs[0].parentNode.removeChild(divs[0]);
     }
+    updateLabelCounter(currentImageIndex)
 }
 
 function bboxAdjust(x, y, bbox_size, ratio, paddings_list) {
@@ -948,7 +930,7 @@ async function complete_label_image() {
 
         try {
             downloadStatus.textContent = `正在儲存 ${imageName} ...`;
-            await fetch('website/save_image', {
+            await fetch('/website/save_image', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -961,7 +943,7 @@ async function complete_label_image() {
                     username: localStorage.getItem('username')
                 })
             });
-            await fetch('website/save_annotations', {
+            await fetch('/website/save_annotations', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -975,7 +957,7 @@ async function complete_label_image() {
                     username: localStorage.getItem('username')
                 })
             });
-            await fetch('website/add_labels_db', {
+            await fetch('/website/add_labels_db', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1007,7 +989,7 @@ function add_parent_child_images(parentImage, childImages) {
         child_images: childImages
     }
 
-    fetch('website/add_img_db', {
+    fetch('/website/add_img_db', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -1029,7 +1011,7 @@ function download_labeled_images() {
     const downloadStatus = document.getElementById('download-status');
     if (completedImageName.length > 0) {
         const queryString = `?class_set=${encodeURIComponent(classSet)}&filenames=${encodeURIComponent(JSON.stringify(completedImageName))}&format_type=${encodeURIComponent(format_type)}`;
-        fetch(`website/download_annotations${queryString}`, {
+        fetch(`/website/download_annotations${queryString}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -1124,7 +1106,7 @@ async function downloadImage(index) {
     const downloadImageName = imageName.replace(/\s+/g, '_');
     try {
         // 保存图片
-        await fetch('website/save_image_for_download', {
+        await fetch('/website/save_image_for_download', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1137,7 +1119,7 @@ async function downloadImage(index) {
 
         // 下载图片
         const queryString = `?filenames=${encodeURIComponent(JSON.stringify(downloadImageName))}`;
-        const response = await fetch(`/download_image${queryString}`, {
+        const response = await fetch(`/website/download_image${queryString}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

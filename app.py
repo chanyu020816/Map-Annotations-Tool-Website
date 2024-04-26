@@ -320,7 +320,7 @@ def save_annotations():
         output_path = os.path.join(label_folder_path, f'{image_name}.txt')
         with open(output_path, 'w') as file:
             for label in yolo_labels:
-                id, x, y, w, h = label.values()
+                id, x, y, w, h = get_values(label)
                 file.write(f'{id} {x} {y} {w} {h} ' + '\n')
 
     # save to server
@@ -480,7 +480,7 @@ def add_labels():
     
     # add labels
     for label in yolo_labels:
-        id, x, y, w, h, _ = label.values()
+        id, x, y, w, h, _ = get_values(label)
         label = Labels(label_history_id, set, id, x, y, w, h)
         db.session.add(label)
         
@@ -538,11 +538,14 @@ def upload_yolo_labels():
     labels = []
     for file in files:
         if file and file.filename.endswith('.txt'):
-            filename = file.filename
-            # existing_image = Image.query.filter_by(filename=filename).first()
-            existing_image = True
+            filename = file.filename[:-4]
+            existing_image = Image.query.filter_by(imagename=filename).first()
             if existing_image:
                 label_data = parse_label_file(file)
+                label_data['pad_xmin'] = existing_image.padding_xmin
+                label_data['pad_ymin'] = existing_image.padding_ymin
+                label_data['pad_xmax'] = existing_image.padding_xmax
+                label_data['pad_ymax'] = existing_image.padding_ymax
                 if label_data:
                     labels.append(label_data)
             else:

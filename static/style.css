@@ -144,6 +144,19 @@ body {
     color: #ffffff;  
 }
 
+#label-counter {
+    padding: 15px 50px;
+    margin: 30px;
+    position: absolute;  
+    top: 140px;  
+    left: 1070px;  
+    vertical-align: top;  
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
 #image-counter {
     padding: 15px 50px;
     margin: 30px;
@@ -334,7 +347,7 @@ a[href^="#"]::after {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(255, 0, 0, 0.7); 
+    background-color: rgba(255, 0, 0, 0.5); 
     border-color: rgb(255, 0, 0); 
 }
 .pagination > .active[data-ptype="2"] > a {
@@ -427,7 +440,7 @@ a[href^="#"]::after {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(255, 0, 0, 0.7);  
+    background-color: rgba(255, 0, 0, 0.5);
     border-color: rgb(255, 0, 0); 
 }
 .pagination > .active[data-ptype="2"] > a:focus {
@@ -537,7 +550,6 @@ label[for="label-size"] {
     font-size: 18px;  
 }
 
-
 #image-menu {
     list-style-type: none;  
     padding: 0;
@@ -557,7 +569,6 @@ label[for="label-size"] {
     content: none;  
     display: none;  
 }
-
 
 .download-image-button {
     background-color: #443aff;
@@ -580,7 +591,6 @@ label[for="label-size"] {
     padding: 5px;  
     border-bottom: 1px solid #ccc;  
     vertical-align: middle;  
-    
 }
 
 #image-menu li > a {
@@ -843,4 +853,96 @@ input{
 #login-status{
     color: red;
     font-size: 18px;
+}
+
+.pagination > .modify[data-ptype="1"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 0, 0, 0.5); 
+    border-color: rgb(255, 0, 0); 
+}
+.pagination > .modify[data-ptype="2"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 0, 255, 0.7);  
+    border-color: rgb(0, 0, 255); 
+}
+.pagination > .modify[data-ptype="3"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 0, 0.7);  
+    border-color: rgb(0, 128, 0); 
+}
+.pagination > .modify[data-ptype="4"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 0, 128, 0.7);  
+    border-color: rgb(128, 0, 128); 
+}
+
+.pagination > .modify[data-ptype="5"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 165, 0, 0.7);  
+    border-color: rgb(255, 165, 0); 
+}
+
+.pagination > .modify[data-ptype="6"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(255, 192, 203, 0.7);  
+    border-color: rgb(255, 192, 203); 
+}
+
+.pagination > .modify[data-ptype="7"] > a  {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 255, 0, 0.7);  
+    border-color: rgb(255, 255, 0); 
+}
+
+.pagination > .modify[data-ptype="8"] >  a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 255, 255, 0.7);  
+}
+
+.pagination > .modify[data-ptype="9"] > a  {
+    z-index: 2;
+    color: rgb(0, 0, 0);
+    cursor: default;
+    background-color: rgba(255, 0, 255, 0.7);  
+    border-color: rgb(255, 0, 255); 
+}
+
+.pagination > .modify[data-ptype="10"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(0, 128, 128, 0.7);  
+    border-color: rgb(0, 128, 128); 
+}
+
+.pagination > .modify[data-ptype="11"] > a  {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(165, 42, 42, 0.7);  
+    border-color: rgb(165, 42, 42); 
+}
+
+.pagination > .modify[data-ptype="12"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);  
+    border-color: rgb(128, 128, 0); 
 }
