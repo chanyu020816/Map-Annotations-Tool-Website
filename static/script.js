@@ -1,5 +1,3 @@
-
-
 let images = [];
 let imagesName = [];
 let currentImageIndex = 0;
@@ -14,6 +12,7 @@ let paddings = []
 let ptype = 1;
 let classSet = 1;
 let annotations = [];
+let anno_ids = [];
 let format_type = 'yolo'
 let mode ='annotate'
 const split_size = 480
@@ -32,7 +31,7 @@ const classColors = {
     11: 'olive',
     12: 'navy'
 };
-let anno_ids = []
+
 
 function submitForm(event) {
     event.preventDefault(); 
@@ -45,7 +44,7 @@ function submitForm(event) {
         classSet = login_set.value;
     });
     login_mode.addEventListener('change', function() {
-        classSet = login_mode.value;
+        mode = login_mode.value;
     });
     fetch('/validate_password', {
         method: 'POST',
@@ -78,6 +77,7 @@ function submitForm(event) {
     });
 }
 function displaySet(set) {
+    set = parseInt(set)
     if (set === 1) {
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
@@ -96,7 +96,6 @@ function displaySet(set) {
         const class1ptype = document.getElementById('class1ptype');
         class1ptype.classList.add('ptype', 'active');
         ptype = 1;
-        console.log("Set1")
     } else if (set === 2) {
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
@@ -116,14 +115,23 @@ function displaySet(set) {
         class2ptype.classList.add('ptype', 'active');
         ptype = 1;
     } else {
+        console.log(set)
         console.error()
     }
 }
 function displayMode(mode) {
     if (mode === 'annotate') {
         document.getElementById("upload-label-button").style.display = "none";
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.remove('modify');
+        });
     } else if (mode === 'modify') {
         document.getElementById("upload-label-button").style.display = "block";
+        const liItems = document.querySelectorAll('li');
+        liItems.forEach(li => {
+            li.classList.add('modify');
+        });
     } else {
         console.error()
     }
@@ -143,7 +151,6 @@ window.onload = function() {
         displayMode(login_mode)
     }
 }
-
 document.addEventListener('DOMContentLoaded', function() {
     const login_set = document.getElementById('login-set');
     login_set.addEventListener('change', function() {
@@ -175,8 +182,16 @@ document.addEventListener('DOMContentLoaded', function() {
             liItems.forEach(item => {
                 if (item === this) {
                     item.classList.add('ptype', 'active');
+                    const aElement = item.querySelector('a'); // Get the <a> element inside the clicked list item
+                    if (aElement) {
+                        aElement.style.border = '3px solid red'; // Set the border color of <a> element
+                    }
                 } else {
                     item.classList.remove('ptype', 'active');
+                    const aElement = item.querySelector('a'); // Get the <a> element inside the list item
+                    if (aElement) {
+                        aElement.style.border = 'none';
+                    }
                 }
             });
         });
@@ -203,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoutBtn = document.getElementById('logout-button');
     logoutBtn.addEventListener('click', logout)
 });
+
 function logout() {
     localStorage.removeItem('username');
     localStorage.removeItem('login_set')
@@ -238,6 +254,10 @@ function logout() {
     }
     document.getElementById('login-set').selectedIndex = 0;
     document.getElementById('login-mode').selectedIndex = 0;
+    const liItems = document.querySelectorAll('li');
+    liItems.forEach(li => {
+        li.querySelector('a').style.border = 'none';
+    });
 }
 
 function handleFileSelect(event) {
@@ -309,7 +329,13 @@ async function readLabel(file) {
 
                 if (index !== -1) {
                     anno_ids[index] = labels_data[0].anno_id
-                    annotations[index] = labels_data[0].annos 
+                    annotations[index] = labels_data[0].annos
+                    paddings[index] = [[
+                        labels_data[0].pad_xmin, 
+                        labels_data[0].pad_ymin, 
+                        labels_data[0].pad_xmax, 
+                        labels_data[0].pad_ymax
+                    ]]
                     labels[index] = labels_data[0].labels
                     // showImage(currentImageIndex, modify=true);
                 } else {
@@ -575,6 +601,7 @@ function showImage(index, change = true, modify=false) {
     document.getElementById('image_display').addEventListener('click', imageClickHandler);
     updateImageCounter(currentImageIndex)
     updatCompleteCounter()
+    updateLabelCounter(currentImageIndex)
 }
 
 function updateAnnotations(index) {
@@ -611,6 +638,7 @@ function updateAnnotations(index) {
             labels[currentImageIndex] = labels[currentImageIndex].filter(label => parseInt(label.anno_id) !== parseInt(removedAnnoId));
             annotations[currentImageIndex] = annotations[currentImageIndex].filter(anno => parseInt(anno.anno_id) !== parseInt(removedAnnoId));
             this.remove();
+            updateLabelCounter(currentImageIndex)
         });
     });
 }
@@ -776,6 +804,10 @@ function showBlankImage() {
     container.innerHTML = '';
 }
 
+function updateLabelCounter(index) {
+    document.getElementById('label-counter').textContent = '標註框數量 ' + labels[index].length;
+}
+
 function imageClickHandler(event) {    
 
     const labelSizeInput = document.getElementById('label-size');
@@ -823,12 +855,13 @@ function imageClickHandler(event) {
         anno_id: anno_ids[currentImageIndex]
     });
     anno_ids[currentImageIndex] += 1
-
+    updateLabelCounter(currentImageIndex)
     div.addEventListener('click', function () {
         const removedAnnoId = this.dataset.anno_id;
         labels[currentImageIndex] = labels[currentImageIndex].filter(label => parseInt(label.anno_id) !== parseInt(removedAnnoId));
         annotations[currentImageIndex] = annotations[currentImageIndex].filter(anno => parseInt(anno.anno_id) !== parseInt(removedAnnoId));
-        this.remove();        
+        this.remove();  
+        updateLabelCounter(currentImageIndex)      
     });
 }
 
@@ -855,6 +888,7 @@ function labelreset() {
     while (divs.length > 0) {
         divs[0].parentNode.removeChild(divs[0]);
     }
+    updateLabelCounter(currentImageIndex)
 }
 
 function bboxAdjust(x, y, bbox_size, ratio, paddings_list) {
