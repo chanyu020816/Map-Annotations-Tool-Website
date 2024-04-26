@@ -77,7 +77,7 @@ function submitForm(event) {
 }
 function displaySet(set) {
     set = parseInt(set)
-    if (classSet === 1) {
+    if (set === 1) {
         document.getElementById("form_container").style.display = "none";
         document.querySelector(".content").style.display = "block";
         document.querySelector("nav").style.display = "block";
@@ -635,6 +635,7 @@ function updateAnnotations(index) {
             labels[currentImageIndex] = labels[currentImageIndex].filter(label => parseInt(label.anno_id) !== parseInt(removedAnnoId));
             annotations[currentImageIndex] = annotations[currentImageIndex].filter(anno => parseInt(anno.anno_id) !== parseInt(removedAnnoId));
             this.remove();
+            updateLabelCounter(currentImageIndex)
         });
     });
 }
