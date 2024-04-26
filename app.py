@@ -170,6 +170,7 @@ def save_image_for_download():
     image = pilImage.open(io.BytesIO(image_bytes))
     image = image.convert('RGB')
     image.save(output_path)
+    return jsonify({'message': 'Image Saved Successfully.'})
 
 @app.route('/save_image', methods=['POST'])
 def save_image():
@@ -511,7 +512,7 @@ def add_labels():
 @app.route('/download_annotations', methods=['GET'])
 def download_annotations():
     class_set = request.args.get('class_set')
-    completed_file_names = request.args.get('filenames').split(';')
+    completed_file_names = request.args.get('filenames').split(',')
     format_type = request.args.get('format_type')
     zip_filename = 'annotations.zip'
     with zipfile.ZipFile(zip_filename, 'w') as zipf:
