@@ -28,8 +28,18 @@ const classColors = {
     9: 'teal',
     10: 'brown',
     11: 'olive',
-    12: 'navy'
+    12: 'navy',
+    13: 'lime',
+    14: 'coral',
+    15: 'aqua',
+    16: 'maroon',
+    17: 'lavender',
+    18: 'grey',
+    19: 'gold',
+    20: 'silver',
+    21: 'indigo'
 };
+
 let anno_ids = []
 
 function submitForm(event) {
