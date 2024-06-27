@@ -959,8 +959,8 @@ input{
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(128, 128, 255, 0.7);
+    border-color: rgb(128, 128, 255);
 }
 .pagination > .modify[data-ptype="14"] > a {
     z-index: 2;
