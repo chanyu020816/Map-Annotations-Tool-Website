@@ -87,7 +87,11 @@ function displaySet(set) {
         pagination2_1.style.display = 'none';
         pagination2_2.style.display = 'none';
         pagination2_3.style.display = 'none';
-        
+        pagination2_4.style.display = 'none';
+        pagination2_5.style.display = 'none';
+        pagination2_6.style.display = 'none';
+
+
         const liItems = document.querySelectorAll('li');
         liItems.forEach(li => {
             li.classList.remove('ptype', 'active');
@@ -105,6 +109,9 @@ function displaySet(set) {
         pagination2_1.style.display = 'block';
         pagination2_2.style.display = 'block';
         pagination2_3.style.display = 'block';
+        pagination2_4.style.display = 'block';
+        pagination2_5.style.display = 'block';
+        pagination2_6.style.display = 'block';
 
         const liItems = document.querySelectorAll('li');
         liItems.forEach(li => {
