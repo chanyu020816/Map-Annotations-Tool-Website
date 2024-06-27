@@ -699,7 +699,18 @@ label[for="label-size"] {
     position: absolute;
     top: 1100px;
 }
-
+#pagination2_4 {
+    position: absolute;
+    top: 1250px;
+}
+#pagination2_5 {
+    position: absolute;
+    top: 1400px;
+}
+#pagination2_6 {
+    position: absolute;
+    top: 1550px;
+}
 #firstSetBtn:hover {
     background-color: #008CBA;  
     color: #ffffff;  
@@ -930,7 +941,6 @@ input{
     background-color: rgba(0, 128, 128, 0.7);  
     border-color: rgb(0, 128, 128); 
 }
-
 .pagination > .modify[data-ptype="11"] > a  {
     z-index: 2;
     color: rgb(255, 255, 255);
@@ -938,11 +948,73 @@ input{
     background-color: rgba(165, 42, 42, 0.7);  
     border-color: rgb(165, 42, 42); 
 }
-
 .pagination > .modify[data-ptype="12"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
     background-color: rgba(128, 128, 0, 0.7);  
     border-color: rgb(128, 128, 0); 
+}
+.pagination > .modify[data-ptype="13"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="14"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="15"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="16"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="17"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="18"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="19"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="20"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
+}
+.pagination > .modify[data-ptype="21"] > a {
+    z-index: 2;
+    color: rgb(255, 255, 255);
+    cursor: default;
+    background-color: rgba(128, 128, 0, 0.7);
+    border-color: rgb(128, 128, 0);
 }
