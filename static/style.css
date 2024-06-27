@@ -959,62 +959,62 @@ input{
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 255, 0.7);
-    border-color: rgb(128, 128, 255);
+    background-color: rgba(0, 0, 128, 0.7); /* navy */
+    border-color: rgb(0, 0, 128); /* navy */
 }
 .pagination > .modify[data-ptype="14"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(0, 255, 0, 0.7); /* lime */
+    border-color: rgb(0, 255, 0); /* lime */
 }
 .pagination > .modify[data-ptype="15"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(255, 127, 80, 0.7); /* coral */
+    border-color: rgb(255, 127, 80); /* coral */
 }
 .pagination > .modify[data-ptype="16"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(0, 255, 255, 0.7); /* aqua */
+    border-color: rgb(0, 255, 255); /* aqua */
 }
 .pagination > .modify[data-ptype="17"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(128, 0, 0, 0.7); /* maroon */
+    border-color: rgb(128, 0, 0); /* maroon */
 }
 .pagination > .modify[data-ptype="18"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(230, 230, 250, 0.7); /* lavender */
+    border-color: rgb(230, 230, 250); /* lavender */
 }
 .pagination > .modify[data-ptype="19"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(128, 128, 128, 0.7); /* grey */
+    border-color: rgb(128, 128, 128); /* grey */
 }
 .pagination > .modify[data-ptype="20"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(255, 215, 0, 0.7); /* gold */
+    border-color: rgb(255, 215, 0); /* gold */
 }
 .pagination > .modify[data-ptype="21"] > a {
     z-index: 2;
     color: rgb(255, 255, 255);
     cursor: default;
-    background-color: rgba(128, 128, 0, 0.7);
-    border-color: rgb(128, 128, 0);
+    background-color: rgba(192, 192, 192, 0.7); /* silver */
+    border-color: rgb(192, 192, 192); /* silver */
 }
